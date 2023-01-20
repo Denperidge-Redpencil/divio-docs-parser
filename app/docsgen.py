@@ -6,7 +6,8 @@ from shutil import rmtree
 from sections import Section
 
 docs_basedir = "docs/"
-rmtree(docs_basedir)
+if exists(docs_basedir):
+    rmtree(docs_basedir)
 
 def join_and_make(path1, path2):
     path = join(path1, path2)
