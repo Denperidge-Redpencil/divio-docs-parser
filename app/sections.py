@@ -56,7 +56,14 @@ class RepoSection:
         regex = r"(^" + self.header + ")" # Start of line, header, end of line
         regex += "(.*)" # All content in between the section header and...
         regex += self.headertags + "(\s|\w)"  # The next header of the same size
-        return regexIMS(regex, self.sourceContent).groups()[1]  # Use the S flag
+        try:
+            return regexIMS(regex, self.sourceContent).groups()[1]  # Use the S flag
+        except AttributeError:
+            # If the regex fails, its possible there is no following header
+            # TODO cleaner solution
+            regex = r"(^" + self.header + ")" # Start of line, header, end of line
+            regex += "(.*)" # All content in between the section header and...
+            return regexIMS(regex, self.sourceContent).groups()[1]  # Use the S flag
     
     @property
     def output(self):
@@ -69,9 +76,10 @@ class RepoSection:
         # ##### Subthing
         # #### Second one
 
+        print(self.sourceContent)
+        print(self.section.name)
         originalBaseHeaderlevel = self.headertags.count('#')  # Example output: 3
         lowerEveryHeaderlevelBy = originalBaseHeaderlevel - 1  # Example output: 2
-        print(originalBaseHeaderlevel)
 
         output = self.header + self.sectionContent  # Add the original header
 

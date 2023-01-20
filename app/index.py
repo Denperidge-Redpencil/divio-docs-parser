@@ -46,7 +46,7 @@ if __name__ == "__main__":
             found = False
             for filename in markdown_files:
                 file_content = repo.filecontents(filename)
-                section_in_content = repoSection.section.found_in(file_content)
+                section_in_content = repoSection.section.found_in(file_content, header=True)
                 section_in_filename =  repoSection.section.found_in(filename)
 
                 # If the file is a section file
