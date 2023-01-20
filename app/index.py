@@ -48,8 +48,7 @@ if __name__ == "__main__":
             section_in_readme = repoSection.section.found_in(readme_content)
             if section_in_readme:
                 repoSection.sourceContent = readme_content
-                add_to_docs(reponame, repoSection.section, repoSection.sectionContent)
-                #print(repoSection.sectionContent)
+                add_to_docs(reponame, repoSection.section, repoSection.output)
             
 
             # TODO check if its in a file somewhere

@@ -1,4 +1,4 @@
-from re import search, RegexFlag
+from re import search, RegexFlag, sub
 
 def regex(needle: r"str", haystack: str, flags):
     return search(needle, haystack, flags)
@@ -32,7 +32,6 @@ class Section:
 class RepoSection:
     def __init__(self, section: Section) -> None:
         self.section = section
-        self.headerlevel = str()
         self.sourceContent = str()
     
     @property
@@ -44,15 +43,51 @@ class RepoSection:
         # Example output: ###
         return regexIM(r"#*\W", self.header).group()
     
+    # This will return everything between 
     @property
     def sectionContent(self):
         # Okay, extracting the content will be a bit complex
         # The regex will contain 3 parts/groups
         # Group 1: the header of the section 
-        regex = r"(^" + self.header + ")" # Start of line, header
+        regex = r"(^" + self.header + ")" # Start of line, header, end of line
         regex += "(.*)" # All content in between the section header and...
         regex += self.headertags + "(\s|\w)"  # The next header of the same size
         return regexIMS(regex, self.sourceContent).groups()[1]  # Use the S flag
+    
+    @property
+    def output(self):
+        # Now we have the unparsed section content,
+        # but the headers are all still based on the old file. And our header isn't there!
+
+        # To guide you through this, we'll use an example with the following structure
+        # ### Tutorials
+        # #### First one
+        # ##### Subthing
+        # #### Second one
+
+        originalBaseHeaderlevel = self.headertags.count('#')  # Example output: 3
+        lowerEveryHeaderlevelBy = originalBaseHeaderlevel - 1  # Example output: 2
+        print(originalBaseHeaderlevel)
+
+        output = self.header + self.sectionContent  # Add the original header
+
+
+        header_regex = r"^#*"
+        
+        def lower_header(match):
+            string = match.group()  # Example: ###
+            originalHeaderlevel = string.count("#")  # Example: 3
+            if originalHeaderlevel > 0:
+                newHeaderLevel = originalHeaderlevel - lowerEveryHeaderlevelBy  # Example: 2
+                string = sub(header_regex, "#"*newHeaderLevel, string)  # Example: #
+            return string
+            
+        # run lower_header on every header in here
+        output = sub(header_regex, lower_header, output, flags=RegexFlag.IGNORECASE|RegexFlag.MULTILINE)        
+
+        return output
+
+        
         
     
 
