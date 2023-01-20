@@ -4,6 +4,7 @@ from os import mkdir
 from os.path import join, exists
 from shutil import rmtree
 from zipfile import ZipFile
+from glob import glob
 
 tmp_dir = "tmp/"
 if exists(tmp_dir):
@@ -56,6 +57,27 @@ class Repo():
     def tmp_files(self):
         # Follows GitHub zip file naming
         return f"{tmp_dir}/{self.name}-{self.branch}"
+    
+    def filepath(self, path):
+        if path.startswith(self.tmp_files):
+            return path
+        return join(self.tmp_files, path)
+
+    def glob(self, path):
+        return glob(self.filepath(path), recursive=True)
+
+    @property
+    def all_markdown_files(self):
+        return self.glob("**/*.md")
+
+    def filecontents(self, path):
+        # If a relative path is given, append
+        path = self.filepath(path)
+
+        with open(path, "r", encoding="UTF-8") as file:
+            data = file.read()
+        
+        return data
     
     
 

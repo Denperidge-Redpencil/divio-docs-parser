@@ -36,12 +36,16 @@ class RepoSection:
     
     @property
     def header(self):
-         return self.section.find_in(self.sourceContent, header=True).group()
+        return self.section.find_in(self.sourceContent, header=True).group()
 
     @property
     def headertags(self):
         # Example output: ###
-        return regexIM(r"#*\W", self.header).group()
+        try:
+            return regexIM(r"#*\W", self.header).group()
+        except AttributeError:
+            print(self.section.name)
+            return None
     
     # This will return everything between 
     @property
@@ -95,8 +99,8 @@ class RepoSection:
 sections = {
     "tutorials": Section("tutorials", " tutorials ", r"tutorial"),
     "howtos": Section("how-tos", "how to's", r"how\W*to"),
-    "explanations": Section("explanations", "explanation(s)", r"reference"),
-    "references": Section("references", "reference(s)", r"(explanation|discussion|background\W*material)")
+    "explanations": Section("explanations", "explanation(s)", r"(explanation|discussion|background\W*material)"),
+    "references": Section("references", "reference(s)", r"reference")
 }
 
 

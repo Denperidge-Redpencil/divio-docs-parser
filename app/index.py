@@ -36,36 +36,34 @@ if __name__ == "__main__":
         reponamePadded = repo.name[:repoHeaderLength].center(repoHeaderLength)
         table = add_and_print(table, f"\n| {reponamePadded} |", f"Checking {repo.name}...")
 
-        #readme_content = get_file_contents(username, reponame, main)
+        readme_content = repo.filecontents("README.md")
 
         # Go over every section
         for i, section_id in enumerate(sections):
             repoSection = RepoSection(sections[section_id])
             
-            """
-            # Check if its in the README
-            section_in_readme = repoSection.section.found_in(readme_content)
-            if section_in_readme:
-                repoSection.sourceContent = readme_content
-                add_to_docs(reponame, repoSection.section, repoSection.output)
-            """
+            markdown_files = repo.all_markdown_files
+            found = False
+            for filename in markdown_files:
+                file_content = repo.filecontents(filename)
+                section_in_content = repoSection.section.found_in(file_content)
+                section_in_filename =  repoSection.section.found_in(filename)
 
-            # TODO check if its in a file somewhere
-            section_in_file = False
-            
-
-            #print(get_markdown_from_repo_direcetory(username, reponame, "", main))
-
-
-            input()
-
-
-            
-
-        
+                # If the file is a section file
+                if section_in_filename:
+                    found = True
+                    repoSection.sourceContent = file_content
+                    # Add the raw output
+                    add_to_docs(repo.name, repoSection.section, file_content)
+                # Else, if the section can be found in a general file
+                elif section_in_content:
+                    found = True
+                    repoSection.sourceContent = file_content
+                    # Add the output to docs, which is filtered
+                    add_to_docs(repo.name, repoSection.section, repoSection.output)
 
 
-            output = ok(padding=len(repoSection.section.headertext)) if section_in_readme or section_in_file else nok(padding=len(repoSection.section.headertext))
+            output = ok(padding=len(repoSection.section.headertext)) if found else nok(padding=len(repoSection.section.headertext))
         
         
             table = add_and_print(table, f" {output} |")
