@@ -11,7 +11,8 @@ def regexIMS(needle: r"str", haystack: str):
     return regex(needle, haystack, RegexFlag.IGNORECASE | RegexFlag.MULTILINE | RegexFlag.S)
 
 class Section:
-    def __init__(self, headertext: str, regex:r"str") -> None:
+    def __init__(self, name: str, headertext: str, regex:r"str") -> None:
+        self.name = name
         self.headertext = headertext
         self.regex = regex
     
@@ -57,10 +58,10 @@ class RepoSection:
 
 
 sections = {
-    "tutorials": Section(" tutorials ", r"tutorial"),
-    "howtos": Section("how to's", r"how\W*to"),
-    "explanations": Section("explanation(s)", r"reference"),
-    "references": Section("reference(s)", r"(explanation|discussion|background\W*material)")
+    "tutorials": Section("tutorials", " tutorials ", r"tutorial"),
+    "howtos": Section("how-tos", "how to's", r"how\W*to"),
+    "explanations": Section("explanations", "explanation(s)", r"reference"),
+    "references": Section("references", "reference(s)", r"(explanation|discussion|background\W*material)")
 }
 
 
