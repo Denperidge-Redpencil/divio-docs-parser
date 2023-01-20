@@ -21,13 +21,20 @@ class Repo():
                 branch = splitPath[1]
                 path = splitPath[0]
             
-            # Extract the path info into userOrOrg & reponame
-            print(path)
-            
-            try:
+
+            # Owner specified in path
+            if "/" in path:
+                # Extract the path info into userOrOrg & reponame
                 owner, reponame = path.split("/")
-            except ValueError:
-                raise ValueError(f"{path} is missing the user/org name, or the repo name!")
+            # If the owner hasn't been specified in the path, but a fallback is given
+            elif owner:
+                # then the provided path is the reponame
+                reponame = path
+            # If no owner has been specified at all, raise ValueError
+            else:
+                raise ValueError(f"{path} is missing the user/org name and/or the repo name!")
+
+                
 
         if owner and reponame:
             self.owner = owner
