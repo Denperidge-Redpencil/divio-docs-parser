@@ -3,7 +3,7 @@ from re import search
 
 from dotenv import load_dotenv
 
-from repo import get_repos, get_readme_contents
+from repo import get_repos, get_file_contents, get_markdown_from_repo_direcetory
 from colourstring import ok, nok
 from sections import sections, RepoSection, Section
 from table import setup_table, add_and_print
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         reponamePadded = reponame[:repoHeaderLength].center(repoHeaderLength)
         table = add_and_print(table, f"\n| {reponamePadded} |", f"Checking {reponame}...")
 
-        readme_content = get_readme_contents(username, reponame, main)
+        readme_content = get_file_contents(username, reponame, main)
 
         # Go over every section
         for i, section_id in enumerate(sections):
@@ -53,6 +53,10 @@ if __name__ == "__main__":
 
             # TODO check if its in a file somewhere
             section_in_file = False
+
+            print(get_markdown_from_repo_direcetory(username, reponame, "", main))
+            
+            input()
 
 
             
