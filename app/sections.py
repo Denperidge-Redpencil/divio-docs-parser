@@ -1,4 +1,4 @@
-from re import search, RegexFlag, sub
+from re import search, RegexFlag, sub, escape
 
 def regex(needle: r"str", haystack: str, flags):
     return search(needle, haystack, flags)
@@ -53,15 +53,15 @@ class RepoSection:
         # Okay, extracting the content will be a bit complex
         # The regex will contain 3 parts/groups
         # Group 1: the header of the section 
-        regex = r"(^" + self.header + ")" # Start of line, header, end of line
+        regex = r"(^" + escape(self.header) + ")" # Start of line, header, end of line
         regex += "(.*)" # All content in between the section header and...
-        regex += self.headertags + "(\s|\w)"  # The next header of the same size
+        regex += escape(self.headertags) + "(\s|\w)"  # The next header of the same size
         try:
             return regexIMS(regex, self.sourceContent).groups()[1]  # Use the S flag
         except AttributeError:
             # If the regex fails, its possible there is no following header
             # TODO cleaner solution
-            regex = r"(^" + self.header + ")" # Start of line, header, end of line
+            regex = r"(^" + escape(self.header) + ")" # Start of line, header, end of line
             regex += "(.*)" # All content in between the section header and...
             return regexIMS(regex, self.sourceContent).groups()[1]  # Use the S flag
     
@@ -105,7 +105,7 @@ class RepoSection:
 
 
 sections = {
-    "tutorials": Section("tutorials", " tutorials ", r"tutorial|getting\W*started|usage"),
+    "tutorials": Section("tutorials", " tutorials ", r"(tutorial|getting\W*started|usage)"),
     "howtos": Section("how-tos", "how to's", r"(how\W*to|guide)"),
     "explanations": Section("explanations", "explanation(s)", r"(explanation|discussion|background\W*material)"),
     "references": Section("references", "reference(s)", r"(reference|technical)")
