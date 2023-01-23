@@ -2,9 +2,10 @@ from os.path import exists, join
 from os import makedirs
 from typing import Union
 from shutil import rmtree
+from glob import glob
 
 from sections import Section
-from nav import NavItem
+from nav import NavItem, markdown_link_from_filepath
 
 docs_basedir = "docs/"
 if exists(docs_basedir):
@@ -41,7 +42,8 @@ def add_to_docs(reponame: str, section: Union[str,Section], content: str, filena
     # Return without 
     return full_filename
 
-def generate_repo_doc_nav(created_files: list):
+
+def add_repo_nav_to_files(created_files: list):
     for adding_nav_to_filename in created_files:
         with open(adding_nav_to_filename, "r", encoding="UTF-8") as adding_nav_to_file:
             prev_content = adding_nav_to_file.read()
@@ -53,3 +55,14 @@ def generate_repo_doc_nav(created_files: list):
 
                 adding_nav_to_file.write(NavItem(other_filename).markdown_link_to_self_from(adding_nav_to_filename))
             adding_nav_to_file.write(prev_content)
+
+
+def generate_nav_file(root: str, max_level: int, filename="README.md"):
+    files_to_link = glob(root + "/*" * max_level)
+    print(files_to_link)
+    with open(join(root, filename), "w", encoding="UTF-8") as file:
+        for file_to_link in files_to_link:
+            file_to_link = file_to_link.replace(root, "").lstrip("/")
+            file.write(markdown_link_from_filepath(file_to_link, file_to_link))
+    
+

@@ -43,7 +43,8 @@ class NavItem():
     def markdown_link_to_self_from(self, filepath: str):
         link = self.link_to_self_from(filepath)
         name = link.replace("../", "")
+        return markdown_link_from_filepath(name, link)
+        
 
-        return f"- [{name}]({link})\n"
-
-
+def markdown_link_from_filepath(name, link):
+    return f"- [{name}]({link})\n"
