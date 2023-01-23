@@ -29,9 +29,18 @@ if nav:
 
 if __name__ == "__main__":
     userOrOrgFallback = environ.get('USERORORG') or None  # Used as default repo owner
-    reponames = environ.get('REPOS').split(',')
+    try:
+        reponames = environ.get('REPOS').split(',')
+        repos: list = [ Repo(repo, owner=userOrOrgFallback) for repo in reponames ]
 
-    repos: list = [ Repo(repo, owner=userOrOrgFallback) for repo in reponames ]
+    except AttributeError:
+        # If user is defined but no specific repos, get repos from GitHub API
+        if userOrOrgFallback:
+            repos = [Repo(reponame=repo['name'], owner=userOrOrgFallback, branch=repo['default_branch']) for repo in get_repos(userOrOrgFallback)]
+            
+            
+
+
 
     for repo in repos:
 
@@ -84,7 +93,7 @@ if __name__ == "__main__":
             table = add_and_print(table, f" {output} |", f"Finished handling {repoSection.section.name}")
         
         
-        if nav:
+        if nav and len(created_files) > 0:
             add_repo_nav_to_files(created_files)
             generate_docs_nav_file(repo.name, 1)
 
