@@ -40,8 +40,8 @@ For ease of use and freedom of implementation, every section has synonyms.
 
 | Section       | Synonyms                        |
 | ------------- | ------------------------------- |
-| Tutorials     | Getting started                 |
-| How-To Guides | How-To, Guide                   |
+| Tutorials     | Getting started, Usage          |
+| How-To's      | How-To, Guide                   |
 | Explanation   | Discussion, background material | 
 | Reference     | Technical                       |
 

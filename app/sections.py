@@ -105,7 +105,7 @@ class RepoSection:
 
 
 sections = {
-    "tutorials": Section("tutorials", " tutorials ", r"tutorial|getting\W*started"),
+    "tutorials": Section("tutorials", " tutorials ", r"tutorial|getting\W*started|usage"),
     "howtos": Section("how-tos", "how to's", r"(how\W*to|guide)"),
     "explanations": Section("explanations", "explanation(s)", r"(explanation|discussion|background\W*material)"),
     "references": Section("references", "reference(s)", r"(reference|technical)")
