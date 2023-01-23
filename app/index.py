@@ -8,6 +8,7 @@ from colourstring import ok, nok
 from sections import sections, RepoSection, Section
 from table import setup_table, add_and_print, print_table
 from docsgen import add_to_docs
+from nav import NavItem
 
 load_dotenv()
 
@@ -84,27 +85,21 @@ if __name__ == "__main__":
             table = add_and_print(table, f" {output} |", f"Finished handling {repoSection.section.name}")
         
         
+        if nav:
+            for adding_nav_to_filename in created_files:
+                with open(adding_nav_to_filename, "r", encoding="UTF-8") as adding_nav_to_file:
+                    prev_content = adding_nav_to_file.read()
+                
+                with open(adding_nav_to_filename, "w", encoding="UTF-8") as adding_nav_to_file:
+                    adding_nav_to = adding_nav_to_filename
 
-        # Add it to each created_file
-        for adding_nav_to_filename in created_files:
-            with open(adding_nav_to_filename, "r", encoding="UTF-8") as adding_nav_to_file:
-                prev_content = adding_nav_to_file.read()
+                    for other_filename in [filename for filename in created_files if filename != adding_nav_to_filename]:
+                        print(other_filename)
+                        
             
-            with open(adding_nav_to_filename, "w", encoding="UTF-8") as adding_nav_to_file:
-                print("Adding: " + adding_nav_to_filename)
-                file_adding_nav_to_url = adding_nav_to_filename[:adding_nav_to_filename.rindex("/")]
-                print("Replacing with: " + file_adding_nav_to_url)
-                
-                for other_filename in [filename for filename in created_files if filename != adding_nav_to_filename]:
-                    nav_text = other_filename[other_filename.rindex("/"):]
-                    nav_url = other_filename.replace(file_adding_nav_to_url, "")
-                    print("other file url: " + nav_url)
-                    
-                
-                    adding_nav_to_file.write(f"- [{nav_text}]({nav_url})\n")
+                        adding_nav_to_file.write(NavItem(other_filename).markdown_link_to_self_from(adding_nav_to_filename))
 
-                adding_nav_to_file.write(prev_content)
-
+                    adding_nav_to_file.write(prev_content)
         print()
 
         
