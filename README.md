@@ -24,6 +24,7 @@ All you have to do is simply name your headers and/or files after the divio sect
     | --------- | ------------------------- |
     | repos     | a list of repositories you want to generate docs for, split by `,`. Format: `owner/reponame`, `owner/reponame@branch` or (when userOrOrg is defined) `reponame`/`reponame@branch`. If this is omitted but userOrOrg is defined, all repos from userOrOrg will be parsed |
     | userOrOrg | username or organisation name. Setting this allows you to omit the owner whilst defining repos |
+    | docs      | The output directory. Defaults to docs/ |
     | nav       | Whether to generate internal navigation between the .md files. Set to `True` to enable, omit to disable |
 - And finally, run using `python3 app/index.py`!
 

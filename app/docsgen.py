@@ -1,13 +1,17 @@
 from os.path import exists, join
-from os import makedirs
+from os import makedirs, environ
 from typing import Union
 from shutil import rmtree
 from glob import glob
 
+from dotenv import load_dotenv
+
 from sections import Section
 from nav import NavItem, markdown_link_from_filepath
 
-docs_basedir = "docs/"
+
+load_dotenv()
+docs_basedir = environ.get("DOCS", "docs/")
 if exists(docs_basedir):
     rmtree(docs_basedir)
 
