@@ -1,6 +1,5 @@
 from os import system, name
 
-
 def setup_table(headers: list) -> str:
     table = '|'
     for header in headers:

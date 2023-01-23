@@ -44,7 +44,7 @@ class RepoSection:
         try:
             return regexIM(r"#*\W", self.header).group()
         except AttributeError:
-            print(self.section.name)
+            #print(self.section.name)
             return None
     
     # This will return everything between 
@@ -76,8 +76,8 @@ class RepoSection:
         # ##### Subthing
         # #### Second one
 
-        print(self.sourceContent)
-        print(self.section.name)
+        #print(self.sourceContent)
+        #print(self.section.name)
         originalBaseHeaderlevel = self.headertags.count('#')  # Example output: 3
         lowerEveryHeaderlevelBy = originalBaseHeaderlevel - 1  # Example output: 2
 

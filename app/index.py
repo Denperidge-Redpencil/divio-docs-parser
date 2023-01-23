@@ -6,13 +6,13 @@ from dotenv import load_dotenv
 from repo import get_repos, get_file_contents, download_and_unzip, Repo
 from colourstring import ok, nok
 from sections import sections, RepoSection, Section
-from table import setup_table, add_and_print
+from table import setup_table, add_and_print, print_table
 from docsgen import add_to_docs
 
 load_dotenv()
 
 
-print("Checking repos for divio docs structure...")
+print_table("Checking repos for divio docs structure...")
 
 headers = [
     "     repository     ", 
@@ -49,24 +49,32 @@ if __name__ == "__main__":
                 section_in_content = repoSection.section.found_in(file_content, header=True)
                 section_in_filename =  repoSection.section.found_in(filename)
 
+                print_msg = f"Adding {repo.name} - {repoSection.section.name} from "
                 # If the file is a section file
                 if section_in_filename:
+                    print_msg += "filename"
+                    print_table(table, print_msg)
                     found = True
                     repoSection.sourceContent = file_content
                     # Add the raw output
                     add_to_docs(repo.name, repoSection.section, file_content)
+                    print_table(table, print_msg.replace("Adding", "Added"))
                 # Else, if the section can be found in a general file
                 elif section_in_content:
+                    print_msg += "filecontent"
+                    print_table(table, print_msg)
                     found = True
                     repoSection.sourceContent = file_content
                     # Add the output to docs, which is filtered
                     add_to_docs(repo.name, repoSection.section, repoSection.output)
+                    print_table(table, print_msg.replace("Adding", "Added"))
+
 
 
             output = ok(padding=len(repoSection.section.headertext)) if found else nok(padding=len(repoSection.section.headertext))
         
         
-            table = add_and_print(table, f" {output} |")
+            table = add_and_print(table, f" {output} |", f"Finished handling {repoSection.section.name}")
         print()
 
         
