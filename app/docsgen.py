@@ -23,9 +23,19 @@ def make_and_get_sectiondir(reponame, section: Union[str,Section]):
     
     return join_and_make(make_and_get_repodir(reponame), section)
 
-def add_to_docs(reponame: str, section: Union[str,Section], content: str, filename="README.md", replaceContent=False):
+def add_to_docs(reponame: str, section: Union[str,Section], content: str, filename="README.md", replaceContent=False, prepend=False) -> str:
     dir = make_and_get_sectiondir(reponame, section)
-    mode = "a+" if not replaceContent else "w"
+    full_filename = join(dir, filename)
+    mode = "a+" if (not replaceContent) and (not prepend) else "w"
 
-    with open(join(dir, filename), mode, encoding="UTF-8") as file:
+    if prepend:
+        with open(full_filename, "r", encoding="UTF-8") as file:
+            original_data = file.read(content)
+
+    with open(full_filename, mode, encoding="UTF-8") as file:
         file.write(content)
+        if prepend:
+            file.write(original_data)
+    
+    # Return without 
+    return full_filename

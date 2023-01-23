@@ -12,7 +12,6 @@ from docsgen import add_to_docs
 load_dotenv()
 
 
-print_table("Checking repos for divio docs structure...")
 
 headers = [
     "     repository     ", 
@@ -21,7 +20,12 @@ headers = [
 
 table = setup_table(headers)
 
+print_table(table, "Checking repos for divio docs structure...")
 
+nav = bool(environ.get("NAV"))
+if nav:
+    print_table(table, "Adding navigation headers to the files...")
+    
 
 if __name__ == "__main__":
     userOrOrgFallback = environ.get('USERORORG') or None  # Used as default repo owner
@@ -38,6 +42,8 @@ if __name__ == "__main__":
 
         readme_content = repo.filecontents("README.md")
 
+        created_files = []
+
         # Go over every section
         for i, section_id in enumerate(sections):
             repoSection = RepoSection(sections[section_id])
@@ -49,24 +55,25 @@ if __name__ == "__main__":
                 section_in_content = repoSection.section.found_in(file_content, header=True)
                 section_in_filename =  repoSection.section.found_in(filename)
 
+                # Written longer than needed for clarity
+                found = True if section_in_content or section_in_filename else False
+
                 print_msg = f"Adding {repo.name} - {repoSection.section.name} from "
                 # If the file is a section file
                 if section_in_filename:
                     print_msg += "filename"
                     print_table(table, print_msg)
-                    found = True
                     repoSection.sourceContent = file_content
                     # Add the raw output
-                    add_to_docs(repo.name, repoSection.section, file_content)
+                    created_files.append(add_to_docs(repo.name, repoSection.section, file_content))
                     print_table(table, print_msg.replace("Adding", "Added"))
                 # Else, if the section can be found in a general file
                 elif section_in_content:
                     print_msg += "filecontent"
                     print_table(table, print_msg)
-                    found = True
                     repoSection.sourceContent = file_content
                     # Add the output to docs, which is filtered
-                    add_to_docs(repo.name, repoSection.section, repoSection.output)
+                    created_files.append(add_to_docs(repo.name, repoSection.section, repoSection.output))
                     print_table(table, print_msg.replace("Adding", "Added"))
 
 
@@ -75,6 +82,29 @@ if __name__ == "__main__":
         
         
             table = add_and_print(table, f" {output} |", f"Finished handling {repoSection.section.name}")
+        
+        
+
+        # Add it to each created_file
+        for adding_nav_to_filename in created_files:
+            with open(adding_nav_to_filename, "r", encoding="UTF-8") as adding_nav_to_file:
+                prev_content = adding_nav_to_file.read()
+            
+            with open(adding_nav_to_filename, "w", encoding="UTF-8") as adding_nav_to_file:
+                print("Adding: " + adding_nav_to_filename)
+                file_adding_nav_to_url = adding_nav_to_filename[:adding_nav_to_filename.rindex("/")]
+                print("Replacing with: " + file_adding_nav_to_url)
+                
+                for other_filename in [filename for filename in created_files if filename != adding_nav_to_filename]:
+                    nav_text = other_filename[other_filename.rindex("/"):]
+                    nav_url = other_filename.replace(file_adding_nav_to_url, "")
+                    print("other file url: " + nav_url)
+                    
+                
+                    adding_nav_to_file.write(f"- [{nav_text}]({nav_url})\n")
+
+                adding_nav_to_file.write(prev_content)
+
         print()
 
         
