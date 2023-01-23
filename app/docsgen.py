@@ -42,13 +42,17 @@ def add_to_docs(reponame: str, section: Union[str,Section], content: str, filena
     # Return without 
     return full_filename
 
+def markdown_parent_nav():
+    return markdown_link_from_filepath("../", "../")
 
-def add_repo_nav_to_files(created_files: list):
+def add_repo_nav_to_files(created_files: list, include_parent_nav = True):
     for adding_nav_to_filename in created_files:
         with open(adding_nav_to_filename, "r", encoding="UTF-8") as adding_nav_to_file:
             prev_content = adding_nav_to_file.read()
 
         with open(adding_nav_to_filename, "w", encoding="UTF-8") as adding_nav_to_file:
+            if include_parent_nav:
+                adding_nav_to_file.write(markdown_parent_nav())
             for other_filename in [filename for filename in created_files if filename != adding_nav_to_filename]:
                 print(other_filename)
 
@@ -57,13 +61,12 @@ def add_repo_nav_to_files(created_files: list):
             adding_nav_to_file.write(prev_content)
 
 
-def generate_docs_nav_file(root: str, max_level: int, filename="README.md"):
+def generate_docs_nav_file(root: str, max_level: int, include_parent_nav = True, filename="README.md"):
     path = docs_basedir + root
-    print(docs_basedir)
-    print("root: " + root)
     files_to_link = glob(path + "/*" * max_level)
-    print(files_to_link)
     with open(join(path, filename), "w", encoding="UTF-8") as file:
+        if include_parent_nav:
+            file.write(markdown_link_from_filepath("../", "../"))
         for file_to_link in files_to_link:
             file_to_link = file_to_link.replace(path, "").lstrip("/")
             file.write(markdown_link_from_filepath(file_to_link, file_to_link))

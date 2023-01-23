@@ -91,6 +91,6 @@ if __name__ == "__main__":
         print()
 
         
-    generate_docs_nav_file("", 1)
+    generate_docs_nav_file("", 1, include_parent_nav=False)
 
 
