@@ -4,6 +4,7 @@ from typing import Union
 from shutil import rmtree
 
 from sections import Section
+from nav import NavItem
 
 docs_basedir = "docs/"
 if exists(docs_basedir):
@@ -39,3 +40,16 @@ def add_to_docs(reponame: str, section: Union[str,Section], content: str, filena
     
     # Return without 
     return full_filename
+
+def generate_repo_doc_nav(created_files: list):
+    for adding_nav_to_filename in created_files:
+        with open(adding_nav_to_filename, "r", encoding="UTF-8") as adding_nav_to_file:
+            prev_content = adding_nav_to_file.read()
+
+        with open(adding_nav_to_filename, "w", encoding="UTF-8") as adding_nav_to_file:
+            for other_filename in [filename for filename in created_files if filename != adding_nav_to_filename]:
+                print(other_filename)
+
+
+                adding_nav_to_file.write(NavItem(other_filename).markdown_link_to_self_from(adding_nav_to_filename))
+            adding_nav_to_file.write(prev_content)

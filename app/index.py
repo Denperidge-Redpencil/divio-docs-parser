@@ -7,8 +7,7 @@ from repo import get_repos, get_file_contents, download_and_unzip, Repo
 from colourstring import ok, nok
 from sections import sections, RepoSection, Section
 from table import setup_table, add_and_print, print_table
-from docsgen import add_to_docs
-from nav import NavItem
+from docsgen import add_to_docs, generate_repo_doc_nav
 
 load_dotenv()
 
@@ -86,20 +85,8 @@ if __name__ == "__main__":
         
         
         if nav:
-            for adding_nav_to_filename in created_files:
-                with open(adding_nav_to_filename, "r", encoding="UTF-8") as adding_nav_to_file:
-                    prev_content = adding_nav_to_file.read()
-                
-                with open(adding_nav_to_filename, "w", encoding="UTF-8") as adding_nav_to_file:
-                    adding_nav_to = adding_nav_to_filename
+            generate_repo_doc_nav(created_files)
 
-                    for other_filename in [filename for filename in created_files if filename != adding_nav_to_filename]:
-                        print(other_filename)
-                        
-            
-                        adding_nav_to_file.write(NavItem(other_filename).markdown_link_to_self_from(adding_nav_to_filename))
-
-                    adding_nav_to_file.write(prev_content)
         print()
 
         
