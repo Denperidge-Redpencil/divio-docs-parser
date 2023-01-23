@@ -27,5 +27,21 @@ All you have to do is simply name your headers and/or files after the divio sect
 - And finally, run using `python3 app/index.py`!
 
 
-## Reference
+## Discussions
+The Divio structure is built upon splitting your documentation into 4 types of documentations. ![The overview of the divio documentation on their website](https://documentation.divio.com/_images/overview.png). In this repository they're referred to as sections.
+
+
 If you want to know more about the design principles of this project, feel free to check out my writeup [here](https://github.com/Denperidge-Redpencil/Learning.md/blob/main/Notes/docs.md#design-principles)!
+
+
+## Reference
+For ease of use and freedom of implementation, every section has synonyms.
+
+| Section       | Synonyms                        |
+| ------------- | ------------------------------- |
+| Tutorials     | Getting started                 |
+| How-To Guides | How-To, Guide                   |
+| Explanation   | Discussion, background material | 
+| Reference     | Technical                       |
+
+
