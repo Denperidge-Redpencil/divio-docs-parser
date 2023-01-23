@@ -7,7 +7,7 @@ from repo import get_repos, get_file_contents, download_and_unzip, Repo
 from colourstring import ok, nok
 from sections import sections, RepoSection, Section
 from table import setup_table, add_and_print, print_table
-from docsgen import add_to_docs, add_repo_nav_to_files, generate_nav_file, docs_basedir
+from docsgen import add_to_docs, add_repo_nav_to_files, generate_docs_nav_file
 
 load_dotenv()
 
@@ -86,11 +86,11 @@ if __name__ == "__main__":
         
         if nav:
             add_repo_nav_to_files(created_files)
-            generate_nav_file(docs_basedir + "/" + repo.name, 1)
+            generate_docs_nav_file(repo.name, 1)
 
         print()
 
         
-    generate_nav_file(docs_basedir, 1)
+    generate_docs_nav_file("", 1)
 
 

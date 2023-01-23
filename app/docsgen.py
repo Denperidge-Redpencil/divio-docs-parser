@@ -57,12 +57,15 @@ def add_repo_nav_to_files(created_files: list):
             adding_nav_to_file.write(prev_content)
 
 
-def generate_nav_file(root: str, max_level: int, filename="README.md"):
-    files_to_link = glob(root + "/*" * max_level)
+def generate_docs_nav_file(root: str, max_level: int, filename="README.md"):
+    path = docs_basedir + root
+    print(docs_basedir)
+    print("root: " + root)
+    files_to_link = glob(path + "/*" * max_level)
     print(files_to_link)
-    with open(join(root, filename), "w", encoding="UTF-8") as file:
+    with open(join(path, filename), "w", encoding="UTF-8") as file:
         for file_to_link in files_to_link:
-            file_to_link = file_to_link.replace(root, "").lstrip("/")
+            file_to_link = file_to_link.replace(path, "").lstrip("/")
             file.write(markdown_link_from_filepath(file_to_link, file_to_link))
     
 
