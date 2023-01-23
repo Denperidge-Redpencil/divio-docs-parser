@@ -12,8 +12,16 @@ from nav import NavItem, markdown_link_from_filepath
 
 load_dotenv()
 docs_basedir = environ.get("DOCS", "docs/")
-if exists(docs_basedir):
-    rmtree(docs_basedir)
+def clear_docs(sections: list):
+    print(sections)
+    sectionnames = [sections[section_id].name for section_id in sections]
+    repodirs = glob(docs_basedir + "/*")
+
+    for repodir in repodirs:
+        for sectionname in sectionnames:
+            if exists(join(repodir, sectionname)):
+                rmtree(repodir)
+                break
 
 def join_and_make(path1, path2):
     path = join(path1, path2)

@@ -7,7 +7,7 @@ from repo import get_repos, get_file_contents, download_and_unzip, Repo
 from colourstring import ok, nok
 from sections import sections, RepoSection, Section
 from table import setup_table, add_and_print, print_table
-from docsgen import add_to_docs, add_repo_nav_to_files, generate_docs_nav_file
+from docsgen import add_to_docs, add_repo_nav_to_files, generate_docs_nav_file, clear_docs
 
 load_dotenv()
 
@@ -39,7 +39,7 @@ if __name__ == "__main__":
             repos = [Repo(reponame=repo['name'], owner=userOrOrgFallback, branch=repo['default_branch']) for repo in get_repos(userOrOrgFallback)]
             
             
-
+    clear_docs(sections)
 
 
     for repo in repos:
