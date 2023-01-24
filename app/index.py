@@ -1,8 +1,7 @@
 from os import environ
 from pathlib import Path
 from re import search
-
-from dotenv import load_dotenv
+from configparser import ConfigParser
 
 from repo import get_repos, get_file_contents, download_and_unzip, Repo
 from colourstring import ok, nok
@@ -10,36 +9,40 @@ from sections import sections, RepoSection, Section
 from table import setup_table, add_and_print, print_table
 from docsgen import add_to_docs, add_repo_nav_to_files, generate_docs_nav_file, clear_docs
 
-load_dotenv()
-
-
-
-headers = [
-    "     repository     ", 
-    sections['tutorials'].headertext, sections['howtos'].headertext,
-    sections['explanations'].headertext, sections['references'].headertext]
-
-table = setup_table(headers)
-
-print_table(table, "Checking repos for divio docs structure...")
-
-nav = bool(environ.get("NAV"))
-if nav:
-    print_table(table, "Adding navigation headers to the files...")
-    
+def get_conf_value(conf, section_id, value_id, default=None):
+    return conf[section_id][value_id] if value_id in conf[section_id] else default
 
 if __name__ == "__main__":
-    userOrOrgFallback = environ.get('USERORORG') or None  # Used as default repo owner
-    repos_data = get_repos(userOrOrgFallback) 
-    try:
-        reponames = environ.get('REPOS').split(',')
-        repos: list = [ Repo(repos_data, repo, owner=userOrOrgFallback) for repo in reponames ]
+    conf = ConfigParser()
+    conf.read("docs.conf")
 
-    except AttributeError:
+    fallbackOwner = get_conf_value(conf, "DEFAULT", "FallbackOwner", None)  # Used as default repo owner
+    nav = bool(get_conf_value(conf, "DEFAULT", "GenerateNav", False))
+
+    repopaths = []
+    conf_sections = conf.sections()
+    for conf_section_id in conf_sections:
+        conf_section = conf[conf_section_id]
+        repopaths.append(conf_section['Path'])
+
+    headers = [
+        "     repository     ", 
+        sections['tutorials'].headertext, sections['howtos'].headertext,
+        sections['explanations'].headertext, sections['references'].headertext]
+
+    table = setup_table(headers)
+
+    print_table(table, "Checking repos for divio docs structure...")
+
+
+    repos_data = get_repos(fallbackOwner) 
+    if len(repopaths) > 0:
+        repos: list = [ Repo(repos_data, repo, owner=fallbackOwner) for repo in repopaths ]
+    elif fallbackOwner:
         # If user is defined but no specific repos, get repos from GitHub API
-        if userOrOrgFallback:
-            repos = [Repo(repos_data, reponame=repo['name'], owner=userOrOrgFallback, branch=repo['default_branch']) for repo in repos_data]
-            
+        repos = [Repo(repos_data, reponame=repo['name'], owner=fallbackOwner, branch=repo['default_branch']) for repo in repos_data]
+    else:
+        raise ValueError("Either FallbackOwner has/repo Paths have to be defined")
             
     clear_docs(sections)
 

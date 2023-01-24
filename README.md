@@ -19,13 +19,7 @@ All you have to do is simply name your headers and/or files after the divio sect
 ## Getting-Started / tutorial
 - Clone the repository using `git clone https://github.com/Denperidge-Redpencil/divio-docs-gen.git && cd divio-docs-gen`
 - Install the pre-requirements using `python3 -m pip install -r requirements.txt`
-- Setup the .env file (also see the [.env.example](.env.example) file)
-    |   name    | value                     |
-    | --------- | ------------------------- |
-    | repos     | a list of repositories you want to generate docs for, split by `,`. Format: `owner/reponame`, `owner/reponame@branch` or (when userOrOrg is defined) `reponame`/`reponame@branch`. If this is omitted but userOrOrg is defined, all repos from userOrOrg will be parsed |
-    | userOrOrg | username or organisation name. Setting this allows you to omit the owner whilst defining repos |
-    | docs      | The output directory. Defaults to docs/ |
-    | nav       | Whether to generate internal navigation between the .md files. Set to `True` to enable, omit to disable |
+- Setup the docs.conf file (See the [reference below](#docsconf) and/or the [docs.conf.example](docs.conf.example) file)
 - And finally, run using `python3 app/index.py`!
 
 
@@ -37,6 +31,32 @@ If you want to know more about the design principles of this project, feel free 
 
 
 ## Reference
+
+### docs.conf
+#### [DEFAULT] section
+This section is on the top of the file, and defines options that affect the entire configuration
+| Parameter     | Functionality                    |
+| ------------- | -------------------------------- |
+| FallbackOwner | (string) Defines which user or org has to be checked for the repository in case its Path does not explicitly define an owner |
+| GenerateNav   | (boolean) Whether to add internal navigation to the top of each generated file. Defaults to `False` |
+
+#### [repo] section
+You can add as many of these as you want. Each one represents a repo you want parsed. You can give any name to `[the-section-header]`, but you should probably avoid duplicates. If no repo sections are defined but you've defined FallbackOwner, all repos of that user or organisation will be parsed.
+
+| Parameter | Functionality                              |
+| --------- | ------------------------------------------ |
+| Path      | (string) Defines which repository to parse |
+
+##### Allowed Path syntax
+You can use any of the following!
+- `reponame` (if fallbackOwner is defined)
+- `reponame@branch` (if fallbackOwner is defined)
+- `owner/reponame`
+- `owner/reponame@branch`
+
+
+
+### Synonyms
 For ease of use and freedom of implementation, every section has synonyms.
 
 | Section       | Synonyms                        |

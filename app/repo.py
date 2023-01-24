@@ -110,14 +110,14 @@ def get_file_contents(username: str, reponame: str, branch: str, path: str="READ
     return data
 
 
-def get_repos(userOrOrg: str) -> list:
-    with request.urlopen(f"https://api.github.com/users/{userOrOrg}/repos") as req:
+def get_repos(owner: str) -> list:
+    with request.urlopen(f"https://api.github.com/users/{owner}/repos") as req:
         repos = loads(req.read())
     return repos
 
 # Unused due to too many requests
-def get_repo_data(userAndReponame: str):
-    with request.urlopen(f"https://api.github.com/repos/{userAndReponame}") as req:
+def get_repo_data(ownerAndReponame: str):
+    with request.urlopen(f"https://api.github.com/repos/{ownerAndReponame}") as req:
         repo = loads(req.read())
     return repo
 
