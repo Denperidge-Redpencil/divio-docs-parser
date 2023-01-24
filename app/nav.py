@@ -29,12 +29,12 @@ class NavItem():
 
             print("Current link: " + link)
 
-            print(f"{from_path_part} == {to_path_part}")
+            print(f"{from_path_part} == {to_path_part}?")
 
             if from_path_part == to_path_part:
                 break
             else:
-                link = f"../{to_path_part}/{link}"
+                link = f"../{to_path_part}/"
         
         return link
 

@@ -70,9 +70,11 @@ if __name__ == "__main__":
                 section_in_content = repoSection.section.found_in(file_content, header=True)
 
                 # Written longer than needed for clarity
-                found = True if section_in_content or section_in_filename else False
+                # Once found, don't allow found to be reset to false by the folowing files
+                if found == False:
+                    found = True if section_in_content or section_in_filename else False
 
-                if found:
+                if section_in_content or section_in_filename:
                     repoSection.sourceContent = file_content
 
                     # If found in filename, add the raw output
@@ -88,10 +90,9 @@ if __name__ == "__main__":
                     created_files.append(add_to_docs(repo.name, repoSection.section, file_content, filename=Path(filename).name))
                     print_table(table, print_msg.replace("Adding", "Added"))
 
+            padding = len(repoSection.section.headertext)
+            output = ok(padding=padding) if found else nok(padding=padding)
 
-            output = ok(padding=len(repoSection.section.headertext)) if found else nok(padding=len(repoSection.section.headertext))
-        
-        
             table = add_and_print(table, f" {output} |", f"Finished handling {repoSection.section.name}")
         
         

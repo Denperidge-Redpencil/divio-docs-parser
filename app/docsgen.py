@@ -3,6 +3,7 @@ from os import makedirs, environ
 from typing import Union
 from shutil import rmtree
 from glob import glob
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -57,20 +58,30 @@ def add_to_docs(reponame: str, section: Union[str,Section], content: str, filena
 def markdown_parent_nav():
     return markdown_link_from_filepath("../", "../")
 
-def add_repo_nav_to_files(created_files: list, include_parent_nav = True):
-    for adding_nav_to_filename in created_files:
-        with open(adding_nav_to_filename, "r", encoding="UTF-8") as adding_nav_to_file:
-            prev_content = adding_nav_to_file.read()
+def add_repo_nav_to_files(filenames: list, include_parent_nav = True):
+    for filename in filenames:
+        add_repo_nav_to_file(filename, include_parent_nav)
 
-        with open(adding_nav_to_filename, "w", encoding="UTF-8") as adding_nav_to_file:
-            if include_parent_nav:
-                adding_nav_to_file.write(markdown_parent_nav())
-            for other_filename in [filename for filename in created_files if filename != adding_nav_to_filename]:
-                print(other_filename)
-
-
-                adding_nav_to_file.write(NavItem(other_filename).markdown_link_to_self_from(adding_nav_to_filename))
-            adding_nav_to_file.write(prev_content)
+def add_repo_nav_to_file(filename: str, include_parent_nav = True):
+    # Save previous content
+    with open(filename, "r", encoding="UTF-8") as file:
+        prev_content = file.read()
+    # Replace content
+    with open(filename, "w", encoding="UTF-8") as file:
+        # Whether to add ../
+        if include_parent_nav:
+            file.write(markdown_parent_nav())
+        
+        filepath = Path(filename)
+        siblings = list(filepath.parent.glob("*"))
+        for sibling in siblings:
+            if sibling.name == filepath.name:
+                continue
+            file.write(markdown_link_from_filepath(sibling.name, sibling.name))
+        
+        file.write("\n")
+            
+        file.write(prev_content)
 
 
 def generate_docs_nav_file(root: str, max_level: int, include_parent_nav = True, filename="README.md"):
