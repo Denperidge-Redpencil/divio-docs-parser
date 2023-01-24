@@ -29,14 +29,15 @@ if nav:
 
 if __name__ == "__main__":
     userOrOrgFallback = environ.get('USERORORG') or None  # Used as default repo owner
+    repos_data = get_repos(userOrOrgFallback) 
     try:
         reponames = environ.get('REPOS').split(',')
-        repos: list = [ Repo(repo, owner=userOrOrgFallback) for repo in reponames ]
+        repos: list = [ Repo(repos_data, repo, owner=userOrOrgFallback) for repo in reponames ]
 
     except AttributeError:
         # If user is defined but no specific repos, get repos from GitHub API
         if userOrOrgFallback:
-            repos = [Repo(reponame=repo['name'], owner=userOrOrgFallback, branch=repo['default_branch']) for repo in get_repos(userOrOrgFallback)]
+            repos = [Repo(repos_data, reponame=repo['name'], owner=userOrOrgFallback, branch=repo['default_branch']) for repo in repos_data]
             
             
     clear_docs(sections)

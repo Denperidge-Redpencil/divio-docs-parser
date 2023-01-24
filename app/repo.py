@@ -12,7 +12,7 @@ if exists(tmp_dir):
 mkdir(tmp_dir)
 
 class Repo():
-    def __init__(self, path:str=None, owner:str=None, reponame:str=None, branch:str=None) -> None:
+    def __init__(self, repos_data: list, path:str=None, owner:str=None, reponame:str=None, branch:str=None) -> None:
         # If the path is provided
         if path:
             # And contains the branch, remove it and set the branch variable to handle later
@@ -47,7 +47,7 @@ class Repo():
         if branch:
             self.branch = branch
         else:
-            self.branch = get_repo_data(self.path)['default_branch']
+            self.branch = next(filter(lambda repo_data: repo_data['name'].lower() == self.name.lower(), repos_data))['default_branch']
         
         download_and_unzip(self.zip_url, self.tmp_files)
 
@@ -115,7 +115,7 @@ def get_repos(userOrOrg: str) -> list:
         repos = loads(req.read())
     return repos
 
-
+# Unused due to too many requests
 def get_repo_data(userAndReponame: str):
     with request.urlopen(f"https://api.github.com/repos/{userAndReponame}") as req:
         repo = loads(req.read())
