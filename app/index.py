@@ -1,4 +1,5 @@
 from os import environ
+from pathlib import Path
 from re import search
 
 from dotenv import load_dotenv
@@ -62,30 +63,30 @@ if __name__ == "__main__":
             found = False
             for filename in markdown_files:
                 file_content = repo.filecontents(filename)
-                section_in_content = repoSection.section.found_in(file_content, header=True)
+
+                # If the file is a section-specific file
                 section_in_filename =  repoSection.section.found_in(filename)
+                # If the section can be found in a general file
+                section_in_content = repoSection.section.found_in(file_content, header=True)
 
                 # Written longer than needed for clarity
                 found = True if section_in_content or section_in_filename else False
 
-                print_msg = f"Adding {repo.name} - {repoSection.section.name} from "
-                # If the file is a section file
-                if section_in_filename:
-                    print_msg += "filename"
-                    print_table(table, print_msg)
+                if found:
                     repoSection.sourceContent = file_content
-                    # Add the raw output
-                    created_files.append(add_to_docs(repo.name, repoSection.section, file_content))
-                    print_table(table, print_msg.replace("Adding", "Added"))
-                # Else, if the section can be found in a general file
-                elif section_in_content:
-                    print_msg += "filecontent"
-                    print_table(table, print_msg)
-                    repoSection.sourceContent = file_content
-                    # Add the output to docs, which is filtered
-                    created_files.append(add_to_docs(repo.name, repoSection.section, repoSection.output))
-                    print_table(table, print_msg.replace("Adding", "Added"))
 
+                    # If found in filename, add the raw output
+                    # If found within a files content, add the (filtered) output to docs
+                    location, content_to_add = \
+                        ("filename", file_content) if section_in_filename \
+                        else ("filecontent", repoSection.output)
+
+                    print_msg = f"Adding {repo.name} - {repoSection.section.name} from {location}"
+
+                    print_table(table, print_msg)
+
+                    created_files.append(add_to_docs(repo.name, repoSection.section, file_content, filename=Path(filename).name))
+                    print_table(table, print_msg.replace("Adding", "Added"))
 
 
             output = ok(padding=len(repoSection.section.headertext)) if found else nok(padding=len(repoSection.section.headertext))
