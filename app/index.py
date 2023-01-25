@@ -1,6 +1,4 @@
-from os import environ
 from pathlib import Path
-from re import search
 
 from repo import get_repos, Repo
 from colourstring import ok, nok
@@ -8,6 +6,15 @@ from sections import sections, RepoSection
 from table import setup_table, add_and_print, print_table
 from docsgen import add_to_docs, add_repo_nav_to_files, generate_docs_nav_file, clear_docs
 from config import repopaths, fallbackOwner, nav
+
+table = ""
+
+def log_and_print(msg, indent=0):
+    print_table(table, msg)
+
+    with open("tmp/log.txt", "a+", encoding="UTF-8") as log:
+        output = ("\t" * indent) + msg + "\n"
+        log.write(output)
 
 if __name__ == "__main__":
     headers = [
@@ -17,23 +24,33 @@ if __name__ == "__main__":
 
     table = setup_table(headers)
 
-    print_table(table, "Checking repos for divio docs structure...")
+    log_and_print("Collecting Repo data...")
 
+    log_and_print("Calling GitHub API...", 1)
+    repos_data = get_repos(fallbackOwner)
+    log_and_print("... called GitHub API", 1)
 
-    repos_data = get_repos(fallbackOwner) 
     if len(repopaths) > 0:
+        log_and_print("Using repo paths defined in config", 1)
         repos: list = [ Repo(repos_data, repo, owner=fallbackOwner) for repo in repopaths ]
     elif fallbackOwner:
+        log_and_print(f"FallbackOwner defined, but no repo paths. Adding all repos owned by {fallbackOwner}", 1)
         # If user is defined but no specific repos, get repos from GitHub API
         repos = [Repo(repos_data, reponame=repo['name'], owner=fallbackOwner, branch=repo['default_branch']) for repo in repos_data]
     else:
-        raise ValueError("Either FallbackOwner has/repo Paths have to be defined")
-            
+        err_msg = "Either FallbackOwner has/repo Paths have to be defined"
+        log_and_print(err_msg)
+        raise ValueError(err_msg)
+
+    log_and_print("... collected Repo data")
+    
+    log_and_print("Clearing old docs")
     clear_docs(sections)
+    log_and_print("Cleared old docs")
 
-
+    log_and_print("Parsing repos...")
     for repo in repos:
-
+        log_and_print(f"Parsing {repo.name}...", 1)
         # Start the row  with the repo name
         repoHeaderLength = len(headers[0])
         reponamePadded = repo.name[:repoHeaderLength].center(repoHeaderLength)
@@ -89,6 +106,9 @@ if __name__ == "__main__":
             generate_docs_nav_file(repo.name, 1)
 
         print()
+        log_and_print(f"... parsed {repo.name}", 1)
+
+    log_and_print("... finished parsing repos")
 
         
     generate_docs_nav_file("", 1, include_parent_nav=False)
