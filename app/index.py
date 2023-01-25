@@ -3,18 +3,11 @@ from pathlib import Path
 from repo import get_repos, Repo
 from colourstring import ok, nok
 from sections import sections, RepoSection
-from table import setup_table, add_and_print, print_table
+from table import setup_table, add_and_print, print_table, log_and_print
 from docsgen import add_to_docs, add_repo_nav_to_files, generate_docs_nav_file, clear_docs
 from config import repopaths, fallbackOwner, nav
 
-table = ""
 
-def log_and_print(msg, indent=0):
-    print_table(table, msg)
-
-    with open("tmp/log.txt", "a+", encoding="UTF-8") as log:
-        output = ("\t" * indent) + msg + "\n"
-        log.write(output)
 
 if __name__ == "__main__":
     headers = [
@@ -22,7 +15,7 @@ if __name__ == "__main__":
         sections['tutorials'].headertext, sections['howtos'].headertext,
         sections['explanations'].headertext, sections['references'].headertext]
 
-    table = setup_table(headers)
+    setup_table(headers)
 
     log_and_print("Collecting Repo data...")
 
@@ -54,7 +47,7 @@ if __name__ == "__main__":
         # Start the row  with the repo name
         repoHeaderLength = len(headers[0])
         reponamePadded = repo.name[:repoHeaderLength].center(repoHeaderLength)
-        table = add_and_print(table, f"\n| {reponamePadded} |", f"Checking {repo.name}...")
+        add_and_print(f"\n| {reponamePadded} |", f"Checking {repo.name}...")
 
         readme_content = repo.filecontents("README.md")
 
@@ -90,15 +83,15 @@ if __name__ == "__main__":
 
                     print_msg = f"Adding {repo.name} - {repoSection.section.name} from {location}"
 
-                    print_table(table, print_msg)
+                    print_table(print_msg)
 
                     created_files.append(add_to_docs(repo.name, repoSection.section, file_content, filename=Path(filename).name))
-                    print_table(table, print_msg.replace("Adding", "Added"))
+                    print_table(print_msg.replace("Adding", "Added"))
 
             padding = len(repoSection.section.headertext)
             output = ok(padding=padding) if found else nok(padding=padding)
 
-            table = add_and_print(table, f" {output} |", f"Finished handling {repoSection.section.name}")
+            add_and_print(f" {output} |", f"Finished handling {repoSection.section.name}")
         
         
         if nav and len(created_files) > 0:
