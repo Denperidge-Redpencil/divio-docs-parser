@@ -1,17 +1,14 @@
 from os.path import exists, join
-from os import makedirs, environ
+from os import makedirs
 from typing import Union
 from shutil import rmtree
 from glob import glob
 from pathlib import Path
 
-from dotenv import load_dotenv
-
 from sections import Section
+from config import docs_basedir
 
 
-load_dotenv()
-docs_basedir = environ.get("DOCS", "docs/")
 def clear_docs(sections: list):
     print(sections)
     sectionnames = [sections[section_id].name for section_id in sections]

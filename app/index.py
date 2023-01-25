@@ -1,30 +1,15 @@
 from os import environ
 from pathlib import Path
 from re import search
-from configparser import ConfigParser
 
-from repo import get_repos, get_file_contents, download_and_unzip, Repo
+from repo import get_repos, Repo
 from colourstring import ok, nok
-from sections import sections, RepoSection, Section
+from sections import sections, RepoSection
 from table import setup_table, add_and_print, print_table
 from docsgen import add_to_docs, add_repo_nav_to_files, generate_docs_nav_file, clear_docs
-
-def get_conf_value(conf, section_id, value_id, default=None):
-    return conf[section_id][value_id] if value_id in conf[section_id] else default
+from config import repopaths, fallbackOwner, nav
 
 if __name__ == "__main__":
-    conf = ConfigParser()
-    conf.read("docs.conf")
-
-    fallbackOwner = get_conf_value(conf, "DEFAULT", "FallbackOwner", None)  # Used as default repo owner
-    nav = bool(get_conf_value(conf, "DEFAULT", "GenerateNav", False))
-
-    repopaths = []
-    conf_sections = conf.sections()
-    for conf_section_id in conf_sections:
-        conf_section = conf[conf_section_id]
-        repopaths.append(conf_section['Path'])
-
     headers = [
         "     repository     ", 
         sections['tutorials'].headertext, sections['howtos'].headertext,

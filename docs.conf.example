@@ -1,6 +1,7 @@
 [DEFAULT]
 FallbackOwner=Denperidge-Redpencil
 GenerateNav=True
+DocsBasedir="docs/"
 
 [divio-docs-gen]
 Path=divio-docs-gen
