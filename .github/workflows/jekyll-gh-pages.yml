@@ -30,8 +30,8 @@ jobs:
       - name: Install requirements
         run: "python3 -m pip install -r requirements.txt"
       
-      - name: Use .env.example as .env
-        run: "cp .env.example .env"
+      - name: Use docs.conf.example as docs.conf
+        run: "cp docs.conf.example docs.conf"
         
       - name: Generate docs
         run: "python3 app/index.py"
