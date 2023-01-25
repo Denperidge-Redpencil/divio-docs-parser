@@ -33,6 +33,7 @@ def clear_docs(sections: list):
     log_and_print("... cleared old docs")
 
 def markdown_link_from_filepath(name, link):
+    link = link.replace(" ", "%20")
     return f"- [{name}]({link})\n"
 
 def join_and_make(path1, path2):
