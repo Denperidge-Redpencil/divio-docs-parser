@@ -96,9 +96,12 @@ class Repo():
         # If a relative path is given, append
         path = self.filepath(path)
 
-        with open(path, "r", encoding="UTF-8") as file:
-            data = file.read()
-        
+        try:
+            with open(path, "r", encoding="UTF-8") as file:
+                data = file.read()
+        except FileNotFoundError:
+            data = ""
+            
         return data
     
     
