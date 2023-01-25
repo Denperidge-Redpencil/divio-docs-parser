@@ -39,6 +39,12 @@ This section is on the top of the file, and defines options that affect the enti
 | ------------- | -------------------------------- |
 | FallbackOwner | (string) Defines which user or org has to be checked for the repository in case its Path does not explicitly define an owner |
 | GenerateNav   | (boolean) Whether to add internal navigation to the top of each generated file. Defaults to `False` |
+| DocsBasedir   | What folder to output the docs in. Defaults to `docs/` |
+| Tutorials     | Sets the output folder name for tutorials. Defaults to `tutorials`    |
+| How-tos     | Sets the output folder name for tutorials. Defaults to `how-tos`    |
+| explanations     | Sets the output folder name for tutorials. Defaults to `explanations`    |
+| references     | Sets the output folder name for tutorials. Defaults to `references`    |
+
 
 #### [repo] section
 You can add as many of these as you want. Each one represents a repo you want parsed. You can give any name to `[the-section-header]`, but you should probably avoid duplicates. If no repo sections are defined but you've defined FallbackOwner, all repos of that user or organisation will be parsed.

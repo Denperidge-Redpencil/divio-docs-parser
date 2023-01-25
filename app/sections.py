@@ -1,4 +1,5 @@
 from re import search, RegexFlag, sub, escape
+from config import section_names
 
 def regex(needle: r"str", haystack: str, flags):
     return search(needle, haystack, flags)
@@ -105,10 +106,10 @@ class RepoSection:
 
 
 sections = {
-    "tutorials": Section("tutorials", " tutorials ", r"(tutorial|getting\W*started)"),
-    "howtos": Section("how-tos", "how to's", r"(how\W*to|guide|usage)"),
-    "explanations": Section("explanations", "explanation(s)", r"(explanation|discussion|background\W*material)"),
-    "references": Section("references", "reference(s)", r"(reference|technical)")
+    "tutorials": Section(section_names["tutorials"], " tutorials ", r"(tutorial|getting\W*started)"),
+    "howtos": Section(section_names["how-tos"], "how to's", r"(how\W*to|guide|usage)"),
+    "explanations": Section(section_names["explanations"], "explanation(s)", r"(explanation|discussion|background\W*material)"),
+    "references": Section(section_names["references"], "reference(s)", r"(reference|technical)")
 }
 
 
