@@ -27,8 +27,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install requirements
-        run: "python3 -m pip install -r requirements.txt"
+      #- name: Install requirements
+      #  run: "python3 -m pip install -r requirements.txt"
       
       - name: Use docs.conf.example as docs.conf
         run: "cp docs.conf.example docs.conf"
