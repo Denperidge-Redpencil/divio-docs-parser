@@ -8,7 +8,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from sections import Section
-from nav import NavItem, markdown_link_from_filepath
 
 
 load_dotenv()
@@ -23,6 +22,9 @@ def clear_docs(sections: list):
             if exists(join(repodir, sectionname)):
                 rmtree(repodir)
                 break
+
+def markdown_link_from_filepath(name, link):
+    return f"- [{name}]({link})\n"
 
 def join_and_make(path1, path2):
     path = join(path1, path2)
