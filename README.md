@@ -17,6 +17,8 @@ Automatically collect, aggregate and structure all your [divio-style documentati
 All you have to do is simply name your headers and/or files after the divio sections (`tutorial`, `how-to`, `explanation`, `reference`). (Oh, don't worry, the search is done through a case insensitive regex. Add more words as you please) 
 
 ## Getting-Started / tutorial
+*(You can also use the [repository template](https://github.com/Denperidge-Redpencil/Divio-Docs-Repo/)!)*
+
 - Clone the repository using `git clone https://github.com/Denperidge-Redpencil/divio-docs-gen.git && cd divio-docs-gen`
 - Install the pre-requirements using `python3 -m pip install -r requirements.txt`
 - Setup the docs.conf file (See the [reference below](#docsconf) and/or the [docs.conf.example](docs.conf.example) file)
