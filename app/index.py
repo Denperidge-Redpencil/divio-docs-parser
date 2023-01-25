@@ -10,7 +10,7 @@ from config import repoconfigs, fallbackOwner, nav
 def filepath_in_exceptions(exceptioned_files: list, filepath: str):
     try:
         log_and_print(f"Checking if {filepath} matches any of the following: {exceptioned_files}")
-        return next(filter(lambda exceptioned_file: exceptioned_file.split("/")[0] in filepath, exceptioned_files))
+        return next(filter(lambda exceptioned_file: exceptioned_file.rsplit("/", 1)[0] in filepath, exceptioned_files))
     except StopIteration:
         return False  # the file is not part of the exception could not be found, return False
                 
@@ -93,7 +93,8 @@ if __name__ == "__main__":
                     log_and_print(f"Ignoring {ignore}")
                     continue
                 if copy:
-                    copy_filename, copy_dest = copy.split("/", 1)
+                    copy_filename, copy_dest = copy.rsplit("/", 1)
+                    copy_filename = Path(copy_filename).name # The selector can be a path, but only the filename should be kept for handling
                     log_and_print(f"Copying {copy_filename} to {copy_dest}")
                     
                     add_to_docs(repo.name, copy_dest, file_content, filename)
