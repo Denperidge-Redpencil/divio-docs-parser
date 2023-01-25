@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
                     log_and_print(print_msg)
 
-                    created_files.append(add_to_docs(repo.name, repoSection.section, file_content, filename=Path(filename).name))
+                    created_files.append(add_to_docs(repo.name, repoSection.section, content_to_add, filename=Path(filename).name))
                     log_and_print(print_msg.replace("Adding", "Added"))
 
                     change_log_index(-1)
