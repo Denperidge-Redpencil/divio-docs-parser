@@ -3,7 +3,7 @@ from pathlib import Path
 from repo import get_repos, Repo
 from colourstring import ok, nok
 from sections import sections, RepoSection
-from table import setup_table, add_and_print, print_table, log_and_print
+from table import setup_table, add_and_print, print_table, log_and_print, change_log_index
 from docsgen import add_to_docs, add_repo_nav_to_files, generate_docs_nav_file, clear_docs
 from config import repopaths, fallbackOwner, nav
 
@@ -18,16 +18,19 @@ if __name__ == "__main__":
     setup_table(headers)
 
     log_and_print("Collecting Repo data...")
+    change_log_index(+1)
 
-    log_and_print("Calling GitHub API...", 1)
+    log_and_print("Collecting repos_data json...")
+    change_log_index(+1)
     repos_data = get_repos(fallbackOwner)
-    log_and_print("... called GitHub API", 1)
+    change_log_index(-1)
+    log_and_print("... collected repos_data")
 
     if len(repopaths) > 0:
-        log_and_print("Using repo paths defined in config", 1)
+        log_and_print("Using repo paths defined in config")
         repos: list = [ Repo(repos_data, repo, owner=fallbackOwner) for repo in repopaths ]
     elif fallbackOwner:
-        log_and_print(f"FallbackOwner defined, but no repo paths. Adding all repos owned by {fallbackOwner}", 1)
+        log_and_print(f"FallbackOwner defined, but no repo paths. Adding all repos owned by {fallbackOwner}")
         # If user is defined but no specific repos, get repos from GitHub API
         repos = [Repo(repos_data, reponame=repo['name'], owner=fallbackOwner, branch=repo['default_branch']) for repo in repos_data]
     else:
@@ -35,19 +38,20 @@ if __name__ == "__main__":
         log_and_print(err_msg)
         raise ValueError(err_msg)
 
+    change_log_index(-1)
     log_and_print("... collected Repo data")
     
-    log_and_print("Clearing old docs")
     clear_docs(sections)
-    log_and_print("Cleared old docs")
 
     log_and_print("Parsing repos...")
+    change_log_index(1)
     for repo in repos:
-        log_and_print(f"Parsing {repo.name}...", 1)
+        log_and_print(f"Parsing {repo.owner}/{repo.name}@{repo.branch}...")
+        change_log_index(1)
         # Start the row  with the repo name
         repoHeaderLength = len(headers[0])
         reponamePadded = repo.name[:repoHeaderLength].center(repoHeaderLength)
-        add_and_print(f"\n| {reponamePadded} |", f"Checking {repo.name}...")
+        add_and_print(f"\n| {reponamePadded} |")
 
         readme_content = repo.filecontents("README.md")
 
@@ -59,6 +63,8 @@ if __name__ == "__main__":
             
             markdown_files = repo.all_markdown_files
             found = False
+            log_and_print(f"Looking for {repoSection.section.name} in markdown files...")
+            change_log_index(1)
             for filename in markdown_files:
                 file_content = repo.filecontents(filename)
 
@@ -67,12 +73,19 @@ if __name__ == "__main__":
                 # If the section can be found in a general file
                 section_in_content = repoSection.section.found_in(file_content, header=True)
 
-                # Written longer than needed for clarity
                 # Once found, don't allow found to be reset to false by the folowing files
                 if found == False:
+                    # Written longer than needed for clarity
                     found = True if section_in_content or section_in_filename else False
 
                 if section_in_content or section_in_filename:
+                    log_and_print("")
+                    log_and_print(f"Found section {repoSection.section.name}, handling {filename}...")
+                    change_log_index(+1)
+
+                    log_and_print(f"Section in content: {section_in_content}")
+                    log_and_print(f"Section in filename: {section_in_filename}")
+
                     repoSection.sourceContent = file_content
 
                     # If found in filename, add the raw output
@@ -81,12 +94,21 @@ if __name__ == "__main__":
                         ("filename", file_content) if section_in_filename \
                         else ("filecontent", repoSection.output)
 
-                    print_msg = f"Adding {repo.name} - {repoSection.section.name} from {location}"
+                    print_msg = f"Adding {repo.name} - {repoSection.section.name} section from {location}"
 
-                    print_table(print_msg)
+                    log_and_print(print_msg)
 
                     created_files.append(add_to_docs(repo.name, repoSection.section, file_content, filename=Path(filename).name))
-                    print_table(print_msg.replace("Adding", "Added"))
+                    log_and_print(print_msg.replace("Adding", "Added"))
+
+                    change_log_index(-1)
+                    log_and_print(f"...finished handling {filename}")
+                    log_and_print("")
+                else:
+                    log_and_print(f"Section {repoSection.section.name} not found in {filename}")
+                
+            change_log_index(-1)
+            log_and_print(f"... finished looking for {repoSection.section.name} in markdown files")
 
             padding = len(repoSection.section.headertext)
             output = ok(padding=padding) if found else nok(padding=padding)
@@ -99,8 +121,11 @@ if __name__ == "__main__":
             generate_docs_nav_file(repo.name, 1)
 
         print()
-        log_and_print(f"... parsed {repo.name}", 1)
+        change_log_index(-1)
+        log_and_print(f"... parsed {repo.name}\n")
 
+
+    change_log_index(-1)
     log_and_print("... finished parsing repos")
 
         

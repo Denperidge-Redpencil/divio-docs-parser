@@ -7,18 +7,30 @@ from pathlib import Path
 
 from sections import Section
 from config import docs_basedir
+from table import log_and_print, change_log_index
 
 
 def clear_docs(sections: list):
-    print(sections)
+    log_and_print("Clearing old docs...")
+    change_log_index(1)
+
     sectionnames = [sections[section_id].name for section_id in sections]
     repodirs = glob(docs_basedir + "/*")
+
+    log_and_print(f"section names to look for: {sectionnames}")
+    log_and_print(f"names of directories to look in: {repodirs}")
 
     for repodir in repodirs:
         for sectionname in sectionnames:
             if exists(join(repodir, sectionname)):
                 rmtree(repodir)
+                log_and_print(f"{repodir}/{sectionname} exists, removed {repodir}")
                 break
+            else:
+                log_and_print(f"{repodir}/{sectionname} does not exist, skipping")
+
+    change_log_index(-1)
+    log_and_print("... cleared old docs")
 
 def markdown_link_from_filepath(name, link):
     return f"- [{name}]({link})\n"

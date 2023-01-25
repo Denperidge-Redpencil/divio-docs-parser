@@ -6,6 +6,8 @@ from shutil import rmtree
 from zipfile import ZipFile
 from glob import glob
 
+from table import log_and_print
+
 tmp_dir = "tmp/"
 if exists(tmp_dir):
     rmtree(tmp_dir)
@@ -110,14 +112,20 @@ def get_file_contents(username: str, reponame: str, branch: str, path: str="READ
     return data
 
 
-def get_repos(owner: str) -> list:
-    with request.urlopen(f"https://api.github.com/users/{owner}/repos") as req:
+def get_json(url: str):
+    log_and_print(f"Fetching JSON from {url}...")
+    with request.urlopen(url) as req:
         repos = loads(req.read())
+    log_and_print(f"...fetched JSON")
+    
     return repos
+
+def get_repos(owner: str) -> list:
+    url = f"https://api.github.com/users/{owner}/repos"
+    return get_json(url)
 
 # Unused due to too many requests
 def get_repo_data(ownerAndReponame: str):
-    with request.urlopen(f"https://api.github.com/repos/{ownerAndReponame}") as req:
-        repo = loads(req.read())
-    return repo
+    url = f"https://api.github.com/repos/{ownerAndReponame}"
+    return get_json(url)
 

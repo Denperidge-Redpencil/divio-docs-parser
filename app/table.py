@@ -1,6 +1,7 @@
 from os import system, name
 
 table = ""
+indent = 0
 
 def setup_table(headers: list) -> str:
     global table
@@ -28,9 +29,17 @@ def print_table(message=""):
     if message:
         print(message)
 
+def change_log_index(modifier):
+    global indent
+    indent += modifier
 
-def log_and_print(msg, indent=0):
+def log_and_print(msg):
+    print_table(msg)
 
     with open("tmp/log.txt", "a+", encoding="UTF-8") as log:
         output = ("\t" * indent) + msg + "\n"
         log.write(output)
+        if indent == 0:
+            log.write("\n")
+
+
