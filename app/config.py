@@ -15,8 +15,10 @@ section_names = dict()
 for section_name in ["tutorials", "how-tos", "explanations", "references"]:
     section_names[section_name] = get_conf_value("DEFAULT", value_id=section_name, default=section_name).lower()
 
-repopaths = []
+
+repoconfigs = []
 conf_sections = conf.sections()
 for conf_section_id in conf_sections:
     conf_section = conf[conf_section_id]
-    repopaths.append(conf_section['Path'])
+
+    repoconfigs.append(dict(conf_section))

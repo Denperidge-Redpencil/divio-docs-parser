@@ -5,9 +5,15 @@ from colourstring import ok, nok
 from sections import sections, RepoSection
 from table import setup_table, add_and_print, print_table, log_and_print, change_log_index
 from docsgen import add_to_docs, add_repo_nav_to_files, generate_docs_nav_file, clear_docs
-from config import repopaths, fallbackOwner, nav
+from config import repoconfigs, fallbackOwner, nav
 
-
+def filepath_in_exceptions(exceptioned_files: list, filepath: str):
+    try:
+        log_and_print(f"Checking if {filepath} matches any of the following: {exceptioned_files}")
+        return next(filter(lambda exceptioned_file: exceptioned_file.split("/")[0] in filepath, exceptioned_files))
+    except StopIteration:
+        return False  # the file is not part of the exception could not be found, return False
+                
 
 if __name__ == "__main__":
     headers = [
@@ -26,9 +32,9 @@ if __name__ == "__main__":
     change_log_index(-1)
     log_and_print("... collected repos_data")
 
-    if len(repopaths) > 0:
+    if len(repoconfigs) > 0:
         log_and_print("Using repo paths defined in config")
-        repos: list = [ Repo(repos_data, repo, owner=fallbackOwner) for repo in repopaths ]
+        repos: list = [ Repo(repos_data, config=repoconfig) for repoconfig in repoconfigs ]
     elif fallbackOwner:
         log_and_print(f"FallbackOwner defined, but no repo paths. Adding all repos owned by {fallbackOwner}")
         # If user is defined but no specific repos, get repos from GitHub API
@@ -60,16 +66,17 @@ if __name__ == "__main__":
         # Go over every section
         for i, section_id in enumerate(sections):
             repoSection = RepoSection(sections[section_id])
-            
+
             markdown_files = repo.all_markdown_files
             found = False
             log_and_print(f"Looking for {repoSection.section.name} in markdown files...")
             change_log_index(1)
-            for filename in markdown_files:
-                file_content = repo.filecontents(filename)
+            for filepath in markdown_files:
+                file_content = repo.filecontents(filepath)
+                filename = Path(filepath).name
 
                 # If the file is a section-specific file
-                section_in_filename =  repoSection.section.found_in(filename)
+                section_in_filename =  repoSection.section.found_in(filepath)
                 # If the section can be found in a general file
                 section_in_content = repoSection.section.found_in(file_content, header=True)
 
@@ -78,9 +85,29 @@ if __name__ == "__main__":
                     # Written longer than needed for clarity
                     found = True if section_in_content or section_in_filename else False
 
+
+
+                ignore = filepath_in_exceptions(repo.files_to_ignore, filepath)
+                copy = filepath_in_exceptions(repo.files_to_copy, filepath)
+                if ignore:
+                    log_and_print(f"Ignoring {ignore}")
+                    continue
+                if copy:
+                    copy_filename, copy_dest = copy.split("/", 1)
+                    log_and_print(f"Copying {copy_filename} to {copy_dest}")
+                    
+                    add_to_docs(repo.name, section=copy_dest, file_content, filename)
+                    repo.files_to_copy.remove(copy)
+                    repo.files_to_ignore.append(copy_filename)
+                    
+                    log_and_print(f"{copy_filename}'s content has been copied!")
+                    continue
+                    
+
+
                 if section_in_content or section_in_filename:
                     log_and_print("")
-                    log_and_print(f"Found section {repoSection.section.name}, handling {filename}...")
+                    log_and_print(f"Found section {repoSection.section.name}, handling {filepath}...")
                     change_log_index(+1)
 
                     log_and_print(f"Section in content: {section_in_content}")
@@ -98,14 +125,14 @@ if __name__ == "__main__":
 
                     log_and_print(print_msg)
 
-                    created_files.append(add_to_docs(repo.name, repoSection.section, content_to_add, filename=Path(filename).name))
+                    created_files.append(add_to_docs(repo.name, repoSection.section, content_to_add, filename=filename))
                     log_and_print(print_msg.replace("Adding", "Added"))
 
                     change_log_index(-1)
-                    log_and_print(f"...finished handling {filename}")
+                    log_and_print(f"...finished handling {filepath}")
                     log_and_print("")
                 else:
-                    log_and_print(f"Section {repoSection.section.name} not found in {filename}")
+                    log_and_print(f"Section {repoSection.section.name} not found in {filepath}")
                 
             change_log_index(-1)
             log_and_print(f"... finished looking for {repoSection.section.name} in markdown files")

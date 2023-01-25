@@ -14,7 +14,20 @@ if exists(tmp_dir):
 mkdir(tmp_dir)
 
 class Repo():
-    def __init__(self, repos_data: list, path:str=None, owner:str=None, reponame:str=None, branch:str=None) -> None:
+    def __init__(self, repos_data: list, path:str=None, owner:str=None, reponame:str=None, branch:str=None, config: dict=None) -> None:
+        self.files_to_copy = []
+        self.files_to_ignore = []
+        print(config)
+        if config:
+            path = config["path"]
+            if not owner:
+                owner = config["fallbackowner"]
+
+            if "copy" in config:
+                self.files_to_copy = config["copy"].split(",")
+            if "ignore" in config:
+                self.files_to_ignore = config["ignore"].split(",")
+
         # If the path is provided
         if path:
             # And contains the branch, remove it and set the branch variable to handle later
