@@ -96,7 +96,7 @@ if __name__ == "__main__":
                     copy_filename, copy_dest = copy.split("/", 1)
                     log_and_print(f"Copying {copy_filename} to {copy_dest}")
                     
-                    add_to_docs(repo.name, section=copy_dest, file_content, filename)
+                    add_to_docs(repo.name, copy_dest, file_content, filename)
                     repo.files_to_copy.remove(copy)
                     repo.files_to_ignore.append(copy_filename)
                     
