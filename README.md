@@ -52,6 +52,10 @@ You can add as many of these as you want. Each one represents a repo you want pa
 | Parameter | Functionality                              |
 | --------- | ------------------------------------------ |
 | Path      | (string) Defines which repository to parse |
+| Copy      | (array) Files in the repository that should be copied to a specific section. Syntax: `file.md/sectionname,file2.md/sectionname` |
+| Ignore      | (array) Files in the repository that should be ignored. Syntax: `file.md,file2.md` |
+
+*Note: for `Copy` and `Ignore` you can choose to be more specific by writing `sub/folder/filename.md`. The check is a `provided_path in full_filepath`, so `sub/folder/filename.md` will apply to `even/further/sub/folder/filename.md`.*
 
 ##### Allowed Path syntax
 You can use any of the following!
