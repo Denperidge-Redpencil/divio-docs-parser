@@ -1,4 +1,7 @@
+# Native imports
 from configparser import ConfigParser
+
+"""Code to handle configuration through docs.conf"""
 
 conf = ConfigParser()
 conf.read("docs.conf")

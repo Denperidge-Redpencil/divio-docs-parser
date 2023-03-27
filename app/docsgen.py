@@ -1,16 +1,20 @@
+# Native imports
 from os.path import exists, join
 from os import makedirs
-from typing import Union
 from shutil import rmtree
-from glob import glob
 from pathlib import Path
+from glob import glob
+from typing import Union
 
+# Local imports
 from sections import Section
 from config import docs_basedir
 from table import log_and_print, change_log_index
 
+"""All code to help generate documentation"""
 
 def clear_docs(sections: list):
+    """Removes previously generated docs"""
     log_and_print("Clearing old docs...")
     change_log_index(1)
 
@@ -33,24 +37,29 @@ def clear_docs(sections: list):
     log_and_print("... cleared old docs")
 
 def markdown_link_from_filepath(name, link):
+    """Helper to create a markdown link"""
     link = link.replace(" ", "%20")
     return f"- [{name}]({link})\n"
 
 def join_and_make(path1, path2):
+    """Join two paths, create the directory"""
     path = join(path1, path2)
     makedirs(path, exist_ok=True)
     return path
 
 def make_and_get_repodir(reponame):
+    """Create a directory for the repository in the docs basedir"""
     return join_and_make(docs_basedir, reponame)
 
 def make_and_get_sectiondir(reponame, section: Union[str,Section]):
+    """Create a directory for the section in the repository's folder"""
     if isinstance(section, Section):
         section = section.name
     
     return join_and_make(make_and_get_repodir(reponame), section)
 
 def add_to_docs(reponame: str, section: Union[str,Section], content: str, filename="README.md", replaceContent=False, prepend=False) -> str:
+    """Add CONTENT to the generated documentation. Optionally creates the needed directories, replaces contents..."""
     dir = make_and_get_sectiondir(reponame, section)
     full_filename = join(dir, filename)
     mode = "a+" if (not replaceContent) and (not prepend) else "w"
@@ -68,13 +77,16 @@ def add_to_docs(reponame: str, section: Union[str,Section], content: str, filena
     return full_filename
 
 def markdown_parent_nav():
+    """Create a markdown link that navigates to the parent"""
     return markdown_link_from_filepath("../", "../")
 
-def add_repo_nav_to_files(filenames: list, include_parent_nav = True):
+def add_sibling_nav_to_files(filenames: list, include_parent_nav = True):
+    """Iterative version of add_repo_nav_to_file"""
     for filename in filenames:
-        add_repo_nav_to_file(filename, include_parent_nav)
+        add_sibling_nav_to_file(filename, include_parent_nav)
 
-def add_repo_nav_to_file(filename: str, include_parent_nav = True):
+def add_sibling_nav_to_file(filename: str, include_parent_nav = True):
+    """Add global navigation to the specified file"""
     # Save previous content
     with open(filename, "r", encoding="UTF-8") as file:
         prev_content = file.read()
@@ -97,6 +109,7 @@ def add_repo_nav_to_file(filename: str, include_parent_nav = True):
 
 
 def generate_docs_nav_file(root: str, max_level: int, include_parent_nav = True, filename="README.md"):
+    """Create a file purely for navigation"""
     path = docs_basedir + root
     files_to_link = glob(path + "/*" * max_level)
     with open(join(path, filename), "w", encoding="UTF-8") as file:

@@ -1,13 +1,18 @@
+# Native imports
 from pathlib import Path
 
+# Relative imports
 from repo import get_repos, Repo
 from colourstring import ok, nok
 from sections import sections, RepoSection
 from table import setup_table, add_and_print, print_table, log_and_print, change_log_index
-from docsgen import add_to_docs, add_repo_nav_to_files, generate_docs_nav_file, clear_docs
+from docsgen import add_to_docs, add_sibling_nav_to_files, generate_docs_nav_file, clear_docs
 from config import repoconfigs, fallbackOwner, nav
 
+"""Entrypoint for the application"""
+
 def filepath_in_exceptions(exceptioned_files: list, filepath: str):
+    """Check if an alternative action has to be taken for a file"""
     try:
         log_and_print(f"Checking if {filepath} matches any of the following: {exceptioned_files}")
         return next(filter(lambda exceptioned_file: exceptioned_file.rsplit("/", 1)[0] in filepath, exceptioned_files))
@@ -16,6 +21,8 @@ def filepath_in_exceptions(exceptioned_files: list, filepath: str):
                 
 
 if __name__ == "__main__":
+    
+    # Get headers for CLI tale
     headers = [
         "     repository     ", 
         sections['tutorials'].headertext, sections['howtos'].headertext,
@@ -28,17 +35,27 @@ if __name__ == "__main__":
 
     log_and_print("Collecting repos_data json...")
     change_log_index(+1)
+
+
+    # Get repo data
     repos_data = get_repos(fallbackOwner)
+    
+    
     change_log_index(-1)
     log_and_print("... collected repos_data")
 
+    # If repo paths have been defined in docs.conf, use those
     if len(repoconfigs) > 0:
         log_and_print("Using repo paths defined in config")
         repos: list = [ Repo(repos_data, config=repoconfig) for repoconfig in repoconfigs ]
+    
+    # If no repo paths have been defined in docs.conf, use all repos from a specific owner
     elif fallbackOwner:
         log_and_print(f"FallbackOwner defined, but no repo paths. Adding all repos owned by {fallbackOwner}")
         # If user is defined but no specific repos, get repos from GitHub API
         repos = [Repo(repos_data, reponame=repo['name'], owner=fallbackOwner, branch=repo['default_branch']) for repo in repos_data]
+    
+    # However, if no paths NOR default owner has been specified, exit
     else:
         err_msg = "Either FallbackOwner has/repo Paths have to be defined"
         log_and_print(err_msg)
@@ -47,6 +64,7 @@ if __name__ == "__main__":
     change_log_index(-1)
     log_and_print("... collected Repo data")
     
+    # Remove previously generated docs
     clear_docs(sections)
 
     log_and_print("Parsing repos...")
@@ -59,11 +77,15 @@ if __name__ == "__main__":
         reponamePadded = repo.name[:repoHeaderLength].center(repoHeaderLength)
         add_and_print(f"\n| {reponamePadded} |")
 
-        readme_content = repo.filecontents("README.md")
+        # readme_content = repo.filecontents("README.md")
 
+        # Keep track of created files, in case a nav bar is to be created
         created_files = []
 
-        # Go over every section
+        # Go over every possible section, for every markdown file in the repo
+        # 1. Check if they're in there, 
+        # 2. Check if they have an exception (see config.py)
+        # 3. Add to docs accordingly 
         for i, section_id in enumerate(sections):
             repoSection = RepoSection(sections[section_id])
 
@@ -144,8 +166,9 @@ if __name__ == "__main__":
             add_and_print(f" {output} |", f"Finished handling {repoSection.section.name}")
         
         
+        # If a nav has to be created, do that
         if nav and len(created_files) > 0:
-            add_repo_nav_to_files(created_files)
+            add_sibling_nav_to_files(created_files)
             generate_docs_nav_file(repo.name, 1)
 
         print()
@@ -156,7 +179,7 @@ if __name__ == "__main__":
     change_log_index(-1)
     log_and_print("... finished parsing repos")
 
-        
+    # Create a top level nav file
     generate_docs_nav_file("", 1, include_parent_nav=False)
 
 

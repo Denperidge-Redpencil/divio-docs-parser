@@ -1,5 +1,7 @@
 from os import system, name
 
+"""Helper functions for the CLI table"""
+
 table = ""
 indent = 0
 
