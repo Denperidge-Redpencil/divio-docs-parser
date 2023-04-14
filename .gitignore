@@ -2,3 +2,7 @@ __pycache__
 docs.conf
 docs/
 tmp/
+
+# Package build
+dist/
+*.egg-info/
