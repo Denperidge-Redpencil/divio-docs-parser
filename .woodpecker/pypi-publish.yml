@@ -7,10 +7,10 @@ pipeline:
   
   publish:
     image: python:3.10
-    secrets: [ pypi_username, pypi_password_or_token ]
+    secrets: [ pypi_password_or_token ]
     commands:
       - python3 -m pip install --upgrade twine
-      - python3 -m twine upload dist/* -u $PYPI_USERNAME -p $PYPI_PASSWORD_OR_TOKEN
+      - python3 -m twine upload dist/* -u __token__ -p $PYPI_PASSWORD_OR_TOKEN
 
 when:
   path:
