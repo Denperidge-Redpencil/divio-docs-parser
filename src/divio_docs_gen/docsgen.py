@@ -8,10 +8,19 @@ from typing import Union
 
 # Local imports
 from sections import Section
-from config import docs_basedir
+from args import args_docs_basedir
 from table import log_and_print, change_log_index
 
 """All code to help generate documentation"""
+
+def filepath_in_exceptions(exceptioned_files: list, filepath: str):
+    """Check if an alternative action has to be taken for a file"""
+    try:
+        log_and_print(f"Checking if {filepath} matches any of the following: {exceptioned_files}")
+        return next(filter(lambda exceptioned_file: exceptioned_file.rsplit("/", 1)[0] in filepath, exceptioned_files))
+    except StopIteration:
+        return False  # the file is not part of the exception could not be found, return False
+   
 
 def clear_docs(sections: list):
     """Removes previously generated docs"""
@@ -19,7 +28,7 @@ def clear_docs(sections: list):
     change_log_index(1)
 
     sectionnames = [sections[section_id].name for section_id in sections]
-    repodirs = glob(docs_basedir + "/*")
+    repodirs = glob(args_docs_basedir + "/*")
 
     log_and_print(f"section names to look for: {sectionnames}")
     log_and_print(f"names of directories to look in: {repodirs}")
@@ -49,7 +58,7 @@ def join_and_make(path1, path2):
 
 def make_and_get_repodir(reponame):
     """Create a directory for the repository in the docs basedir"""
-    return join_and_make(docs_basedir, reponame)
+    return join_and_make(args_docs_basedir, reponame)
 
 def make_and_get_sectiondir(reponame, section: Union[str,Section]):
     """Create a directory for the section in the repository's folder"""
@@ -110,7 +119,7 @@ def add_sibling_nav_to_file(filename: str, include_parent_nav = True):
 
 def generate_docs_nav_file(root: str, max_level: int, include_parent_nav = True, filename="README.md"):
     """Create a file purely for navigation"""
-    path = docs_basedir + root
+    path = args_docs_basedir + root
     files_to_link = glob(path + "/*" * max_level)
     with open(join(path, filename), "w", encoding="UTF-8") as file:
         if include_parent_nav:

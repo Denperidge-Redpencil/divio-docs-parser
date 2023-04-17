@@ -8,6 +8,7 @@ from json import loads
 from zipfile import ZipFile
 # Local imports
 from table import log_and_print
+from args import args_default_owner
 
 """Repo class, including utilities to download Repository files"""
 
@@ -26,7 +27,7 @@ class Repo():
         if config:
             path = config["path"]
             if not owner:
-                owner = config["fallbackowner"]
+                owner = args_default_owner
 
             if "copy" in config:
                 self.files_to_copy = config["copy"].split(",")
@@ -155,7 +156,7 @@ def get_json(url: str):
 
 def get_repos(owner: str) -> list:
     """Get list of repos from specified owner"""
-    url = f"https://api.github.com/users/{owner}/repos"
+    url = f"https://api.github.com/users/{owner}/repos?per_page=100"
     return get_json(url)
 
 # Unused due to too many requests

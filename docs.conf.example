@@ -1,5 +1,5 @@
 [DEFAULT]
-FallbackOwner=Denperidge-Redpencil
+DefaultOwner=Denperidge-Redpencil
 GenerateNav=True
 DocsBasedir=docs/
 

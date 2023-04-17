@@ -1,24 +1,15 @@
 # Native imports
 from pathlib import Path
 
-# Relative imports
+# Local imports
 from repo import get_repos, Repo
 from colourstring import ok, nok
 from sections import sections, RepoSection
-from table import setup_table, add_and_print, print_table, log_and_print, change_log_index
-from docsgen import add_to_docs, add_sibling_nav_to_files, generate_docs_nav_file, clear_docs
-from config import repoconfigs, fallbackOwner, nav
+from table import setup_table, add_and_print, log_and_print, change_log_index
+from docsgen import filepath_in_exceptions, add_to_docs, add_sibling_nav_to_files, generate_docs_nav_file, clear_docs
+from args import args_repoconfigs, args_default_owner, args_generate_nav
 
 """Entrypoint for the application"""
-
-def filepath_in_exceptions(exceptioned_files: list, filepath: str):
-    """Check if an alternative action has to be taken for a file"""
-    try:
-        log_and_print(f"Checking if {filepath} matches any of the following: {exceptioned_files}")
-        return next(filter(lambda exceptioned_file: exceptioned_file.rsplit("/", 1)[0] in filepath, exceptioned_files))
-    except StopIteration:
-        return False  # the file is not part of the exception could not be found, return False
-                
 
 if __name__ == "__main__":
     
@@ -38,26 +29,26 @@ if __name__ == "__main__":
 
 
     # Get repo data
-    repos_data = get_repos(fallbackOwner)
+    repos_data = get_repos(args_default_owner)
     
     
     change_log_index(-1)
     log_and_print("... collected repos_data")
 
     # If repo paths have been defined in docs.conf, use those
-    if len(repoconfigs) > 0:
+    if len(args_repoconfigs) > 0:
         log_and_print("Using repo paths defined in config")
-        repos: list = [ Repo(repos_data, config=repoconfig) for repoconfig in repoconfigs ]
+        repos: list = [ Repo(repos_data, config=repoconfig) for repoconfig in args_repoconfigs ]
     
     # If no repo paths have been defined in docs.conf, use all repos from a specific owner
-    elif fallbackOwner:
-        log_and_print(f"FallbackOwner defined, but no repo paths. Adding all repos owned by {fallbackOwner}")
+    elif args_default_owner:
+        log_and_print(f"args_default_owner defined, but no repo paths. Adding all repos owned by {args_default_owner}")
         # If user is defined but no specific repos, get repos from GitHub API
-        repos = [Repo(repos_data, reponame=repo['name'], owner=fallbackOwner, branch=repo['default_branch']) for repo in repos_data]
+        repos = [Repo(repos_data, reponame=repo['name'], owner=args_default_owner, branch=repo['default_branch']) for repo in repos_data]
     
     # However, if no paths NOR default owner has been specified, exit
     else:
-        err_msg = "Either FallbackOwner has/repo Paths have to be defined"
+        err_msg = "Either args_default_owner has/repo Paths have to be defined"
         log_and_print(err_msg)
         raise ValueError(err_msg)
 
@@ -167,7 +158,7 @@ if __name__ == "__main__":
         
         
         # If a nav has to be created, do that
-        if nav and len(created_files) > 0:
+        if args_generate_nav and len(created_files) > 0:
             add_sibling_nav_to_files(created_files)
             generate_docs_nav_file(repo.name, 1)
 

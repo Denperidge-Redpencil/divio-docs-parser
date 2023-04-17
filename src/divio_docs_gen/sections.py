@@ -1,5 +1,5 @@
 from re import search, RegexFlag, sub, escape
-from config import section_names
+from args import args_section_names
 
 """Defines section (how-to, getting started...) classes"""
 
@@ -128,10 +128,10 @@ class RepoSection:
 
 """Section definitions. This is where you can customise synonyms"""
 sections = {
-    "tutorials": Section(section_names["tutorials"], " tutorials ", r"(tutorial|getting\W*started)"),
-    "howtos": Section(section_names["how-tos"], "how to's", r"(how\W*to|guide|usage)"),
-    "explanations": Section(section_names["explanations"], "explanation(s)", r"(explanation|discussion|background\W*material)"),
-    "references": Section(section_names["references"], "reference(s)", r"(reference|technical)")
+    "tutorials": Section(args_section_names["tutorials"], " tutorials ", r"(tutorial|getting\W*started)"),
+    "howtos": Section(args_section_names["how-tos"], "how to's", r"(how\W*to|guide|usage)"),
+    "explanations": Section(args_section_names["explanations"], "explanation(s)", r"(explanation|discussion|background\W*material)"),
+    "references": Section(args_section_names["references"], "reference(s)", r"(reference|technical)")
 }
 
 
