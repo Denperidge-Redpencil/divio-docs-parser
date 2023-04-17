@@ -11,9 +11,9 @@ from args import args_repoconfigs, args_default_owner, args_generate_nav
 
 """Entrypoint for the application"""
 
-if __name__ == "__main__":
-    
-    # Get headers for CLI tale
+
+def generate_docs():    
+    # Get headers for CLI table
     headers = [
         "     repository     ", 
         sections['tutorials'].headertext, sections['howtos'].headertext,
@@ -174,3 +174,5 @@ if __name__ == "__main__":
     generate_docs_nav_file("", 1, include_parent_nav=False)
 
 
+if __name__ == "__main__":
+    generate_docs()
