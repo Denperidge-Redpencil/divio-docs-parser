@@ -2,12 +2,12 @@
 from pathlib import Path
 
 # Local imports
-from repo import get_repos, Repo
-from colourstring import ok, nok
-from sections import sections, RepoSection
-from table import setup_table, add_and_print, log_and_print, change_log_index
-from docsgen import filepath_in_exceptions, add_to_docs, add_sibling_nav_to_files, generate_docs_nav_file, clear_docs
-from args import args_repoconfigs, args_default_owner, args_generate_nav
+from .repo import get_repos, Repo
+from .colourstring import ok, nok
+from .sections import sections, RepoSection
+from .table import setup_table, add_and_print, log_and_print, change_log_index
+from .docsgen import filepath_in_exceptions, add_to_docs, add_sibling_nav_to_files, generate_docs_nav_file, clear_docs
+from .args import args_repoconfigs, args_default_owner, args_generate_nav
 
 """Entrypoint for the application"""
 

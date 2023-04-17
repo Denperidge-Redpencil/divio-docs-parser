@@ -1,5 +1,5 @@
 from re import search, RegexFlag, sub, escape
-from args import args_section_names
+from .args import args_section_names
 
 """Defines section (how-to, getting started...) classes"""
 

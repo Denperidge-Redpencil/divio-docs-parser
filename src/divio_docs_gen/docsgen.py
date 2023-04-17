@@ -7,9 +7,9 @@ from glob import glob
 from typing import Union
 
 # Local imports
-from sections import Section
-from args import args_docs_basedir
-from table import log_and_print, change_log_index
+from .sections import Section
+from .args import args_docs_basedir
+from .table import log_and_print, change_log_index
 
 """All code to help generate documentation"""
 

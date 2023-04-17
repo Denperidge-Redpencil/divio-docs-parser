@@ -7,8 +7,8 @@ from urllib import request, error
 from json import loads
 from zipfile import ZipFile
 # Local imports
-from table import log_and_print
-from args import args_default_owner
+from .table import log_and_print
+from .args import args_default_owner
 
 """Repo class, including utilities to download Repository files"""
 

@@ -24,6 +24,14 @@ All you have to do is simply name your headers and/or files after the divio sect
 - Setup the docs.conf file (See the [reference below](#docsconf) and/or the [docs.conf.example](docs.conf.example) file)
 - And finally, run using `python3 app/index.py`!
 
+## How-To
+### Build & install package locally
+```bash
+python3.10 -m pip install --upgrade build setuptools
+python3.10 -m build
+python3.10 -m pip install --force-reinstall ./dist/*.whl
+```
+*Note: other Python versions can be used!*
 
 ## Discussions
 The Divio structure is built upon splitting your documentation into 4 types of documentations. ![The overview of the divio documentation on their website](https://documentation.divio.com/_images/overview.png). In this repository they're referred to as sections.
