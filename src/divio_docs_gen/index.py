@@ -2,12 +2,12 @@
 from pathlib import Path
 
 # Local imports
-from .repo import get_repos, Repo
+from .repo import get_repos, Repo, tmp_dir
 from .colourstring import ok, nok
 from .sections import sections, RepoSection
 from .table import setup_table, add_and_print, log_and_print, change_log_index
 from .docsgen import filepath_in_exceptions, write_to_docs, add_sibling_nav_to_files, generate_docs_nav_file, clear_docs, add_to_data_output
-from .args import args_repoconfigs, args_default_owner, args_generate_nav, args_write_to_disk
+from .args import args_repoconfigs, args_default_owner, args_generate_nav, args_write_to_disk, args_dont_remove_tmp
 
 """Entrypoint for the application"""
 
@@ -177,6 +177,10 @@ def generate_docs() -> dict:
 
     # Create a top level nav file
     generate_docs_nav_file("", 1, include_parent_nav=False)
+
+    if not args_dont_remove_tmp:
+        from shutil import rmtree
+        rmtree(tmp_dir)
 
     return data_output
 

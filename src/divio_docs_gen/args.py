@@ -36,6 +36,12 @@ ouptut_config.add_argument("--write-to-disk", "--write",
                            action="store_true",
                            default=None,
                            )
+ouptut_config.add_argument("--dont-remove-tmp", "--tmp",
+                           dest="DontRemoveTmp",
+                           help="When used, the tmp/ folder does not get deleted",
+                           action="store_true",
+                           default=None,
+                           )
 
 naming_scheme = parser.add_argument_group(conf_sections["naming"])
 for section_key in ["tutorials", "how-tos", "explanations", "references"]:
@@ -113,6 +119,7 @@ args_default_owner = get_value(conf_sections["repos"], "DefaultOwner", None)  # 
 args_write_to_disk = bool(get_value(conf_sections["output"], "WriteToDisk", False))
 args_generate_nav = bool(get_value(conf_sections["output"], "GenerateNav", False))
 args_docs_basedir = get_value(conf_sections["output"], "DocsBasedir", "docs/")
+args_dont_remove_tmp = bool(get_value(conf_sections["output"], "DontRemoveTmp", False))
 
 args_section_names = dict()
 for section_name in ["tutorials", "how-tos", "explanations", "references"]:
