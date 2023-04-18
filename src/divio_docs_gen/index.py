@@ -6,13 +6,15 @@ from .repo import get_repos, Repo
 from .colourstring import ok, nok
 from .sections import sections, RepoSection
 from .table import setup_table, add_and_print, log_and_print, change_log_index
-from .docsgen import filepath_in_exceptions, add_to_docs, add_sibling_nav_to_files, generate_docs_nav_file, clear_docs
-from .args import args_repoconfigs, args_default_owner, args_generate_nav
+from .docsgen import filepath_in_exceptions, write_to_docs, add_sibling_nav_to_files, generate_docs_nav_file, clear_docs, add_to_data_output
+from .args import args_repoconfigs, args_default_owner, args_generate_nav, args_write_to_disk
 
 """Entrypoint for the application"""
 
 
-def generate_docs():    
+def generate_docs() -> dict:
+    data_output = dict()
+    
     # Get headers for CLI table
     headers = [
         "     repository     ", 
@@ -109,8 +111,9 @@ def generate_docs():
                     copy_filename, copy_dest = copy.rsplit("/", 1)
                     copy_filename = Path(copy_filename).name # The selector can be a path, but only the filename should be kept for handling
                     log_and_print(f"Copying {copy_filename} to {copy_dest}")
-                    
-                    add_to_docs(repo.name, copy_dest, file_content, filename)
+                    # TODO copy in data_output?
+                    if args_write_to_disk:
+                        write_to_docs(repo.name, copy_dest, file_content, filename)
                     repo.files_to_copy.remove(copy)
                     repo.files_to_ignore.append(copy_filename)
                     
@@ -139,7 +142,9 @@ def generate_docs():
 
                     log_and_print(print_msg)
 
-                    created_files.append(add_to_docs(repo.name, repoSection.section, content_to_add, filename=filename))
+                    data_output = add_to_data_output(data_output, repo.name, repoSection.section.name, content_to_add)
+                    if args_write_to_disk:
+                        created_files.append(write_to_docs(repo.name, repoSection.section, content_to_add, filename=filename))
                     log_and_print(print_msg.replace("Adding", "Added"))
 
                     change_log_index(-1)
@@ -158,7 +163,7 @@ def generate_docs():
         
         
         # If a nav has to be created, do that
-        if args_generate_nav and len(created_files) > 0:
+        if args_write_to_disk and args_generate_nav and len(created_files) > 0:
             add_sibling_nav_to_files(created_files)
             generate_docs_nav_file(repo.name, 1)
 
@@ -172,6 +177,8 @@ def generate_docs():
 
     # Create a top level nav file
     generate_docs_nav_file("", 1, include_parent_nav=False)
+
+    return data_output
 
 
 if __name__ == "__main__":

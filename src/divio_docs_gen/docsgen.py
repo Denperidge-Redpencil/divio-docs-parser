@@ -67,7 +67,18 @@ def make_and_get_sectiondir(reponame, section: Union[str,Section]):
     
     return join_and_make(make_and_get_repodir(reponame), section)
 
-def add_to_docs(reponame: str, section: Union[str,Section], content: str, filename="README.md", replaceContent=False, prepend=False) -> str:
+def add_to_data_output(data_output: dict, reponame: str, section_name: str, content: str):
+    if reponame not in data_output:
+        data_output[reponame] = dict()
+
+    if section_name not in data_output[reponame]:
+        data_output[reponame][section_name] = content
+    else:
+        data_output[reponame][section_name] += content
+    
+    return data_output
+
+def write_to_docs(reponame: str, section: Union[str,Section], content: str, filename="README.md", replaceContent=False, prepend=False) -> str:
     """Add CONTENT to the generated documentation. Optionally creates the needed directories, replaces contents..."""
     dir = make_and_get_sectiondir(reponame, section)
     full_filename = join(dir, filename)
@@ -83,7 +94,7 @@ def add_to_docs(reponame: str, section: Union[str,Section], content: str, filena
             file.write(original_data)
     
     # Return without 
-    return full_filename
+    return [ full_filename ]
 
 def markdown_parent_nav():
     """Create a markdown link that navigates to the parent"""

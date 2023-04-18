@@ -18,6 +18,9 @@ ouptut_config.add_argument("--generate-nav", "--nav",
 ouptut_config.add_argument("--docs-base-dir", "--docs-dir", "--dir", "-d", 
                     help="What folder to output the docs in. Defaults to `docs/", 
                     default="docs/")
+ouptut_config.add_argument("--write-to-disk", "--write",
+                           help="Whether to write the markdown to disk",
+                           action="store_true")
 
 naming_scheme = parser.add_argument_group("Naming scheme")
 for section in ["tutorials", "how-tos", "explanations", "references"]:
@@ -69,6 +72,7 @@ def get_value(section_id, value_id, default):
 args_default_owner = get_value("DEFAULT", "DefaultOwner", None)  # Used as default repo owner
 args_generate_nav = bool(get_value("DEFAULT", "GenerateNav", False))
 args_docs_basedir = get_value("DEFAULT", "DocsBasedir", "docs/")
+args_write_to_disk = bool(get_value("DEFAULT", "WriteToDisk", False))
 
 args_section_names = dict()
 for section_name in ["tutorials", "how-tos", "explanations", "references"]:
