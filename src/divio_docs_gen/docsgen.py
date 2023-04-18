@@ -94,7 +94,7 @@ def write_to_docs(reponame: str, section: Union[str,Section], content: str, file
             file.write(original_data)
     
     # Return without 
-    return [ full_filename ]
+    return full_filename
 
 def markdown_parent_nav():
     """Create a markdown link that navigates to the parent"""
@@ -108,6 +108,7 @@ def add_sibling_nav_to_files(filenames: list, include_parent_nav = True):
 def add_sibling_nav_to_file(filename: str, include_parent_nav = True):
     """Add global navigation to the specified file"""
     # Save previous content
+    print(filename)
     with open(filename, "r", encoding="UTF-8") as file:
         prev_content = file.read()
     # Replace content
