@@ -17,21 +17,34 @@ Automatically collect, aggregate and structure all your [divio-style documentati
 All you have to do is simply name your headers and/or files after the divio sections (`tutorial`, `how-to`, `explanation`, `reference`). (Oh, don't worry, the search is done through a case insensitive regex. Add more words as you please) 
 
 ## Getting-Started / tutorial
-*(You can also use the [repository template](https://github.com/Denperidge-Redpencil/Divio-Docs-Repo/)!)*
-
-- Clone the repository using `git clone https://github.com/Denperidge-Redpencil/divio-docs-gen.git && cd divio-docs-gen`
-- Install the pre-requirements using `python3 -m pip install -r requirements.txt`
-- Setup the docs.conf file (See the [reference below](#docsconf) and/or the [docs.conf.example](docs.conf.example) file)
-- And finally, run using `python3 app/index.py`!
+- Install the package (`python3 -m pip install divio_docs_gen`)
+- And then either...
+    - Setup the docs.conf file (See the [reference below](#docsconf) and/or the [docs.conf.example](docs.conf.example) file)
+    - Use throught the cli (`python3 -m divio_docs_gen --help`)
 
 ## How-To
+### Install from pip
+```bash
+python3 -m pip install divio_docs_gen
+```
+
+### Clone & run scripts locally
+```bash
+git clone https://github.com/Denperidge-Redpencil/divio-docs-gen.git
+cd divio-docs-gen
+python3 -m pip install -r requirements.txt
+python3 src.divio_docs_gen
+```
+
 ### Build & install package locally
 ```bash
-python3.10 -m pip install --upgrade build setuptools
-python3.10 -m build
-python3.10 -m pip install --force-reinstall ./dist/*.whl
+git clone https://github.com/Denperidge-Redpencil/divio-docs-gen.git
+cd divio-docs-gen/
+python3 -m pip install --upgrade build setuptools
+python3 -m build && python3 -m pip install --force-reinstall ./dist/*.whl
 ```
 *Note: other Python versions can be used!*
+
 
 ## Discussions
 The Divio structure is built upon splitting your documentation into 4 types of documentations. ![The overview of the divio documentation on their website](https://documentation.divio.com/_images/overview.png). In this repository they're referred to as sections.
