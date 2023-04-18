@@ -1,6 +1,6 @@
 [project]
 name = "divio_docs_gen"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
     { name="Denperidge", email="denperidge@gmail.com" },
 ]
