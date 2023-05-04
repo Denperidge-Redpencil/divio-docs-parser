@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 
 """Code to handle configuration, through docs.conf or args"""
 
-section_keys = ["tutorials", "how-tos", "explanations", "references"]
+section_keys = ["tutorials", "howtos", "explanations", "references"]
 class Args:
     def __init__(self) -> None:
         # store_true default is False, which means save_conf's output will be too verbose. Use None instead
@@ -17,6 +17,19 @@ class Args:
         self.tutorials, self.howtos, self.explanations, self.references = section_keys
 
         self.repos = []
+    
+    def get_configured_section_name(self, section_id: str):
+        # TODO look for a cleaner solution
+        if section_id == section_keys[0]:
+            return self.tutorials
+        elif section_id == section_keys[1]:
+            return self.howtos
+        elif section_id == section_keys[2]:
+            return self.explanations
+        elif section_id == section_keys[3]:
+            return self.references
+        print(section_id)
+
 
     
     def __str__(self) -> str:
@@ -142,7 +155,7 @@ args.write_to_disk = bool(get_value(conf_sections["output"], "WriteToDisk", Fals
 args.generate_nav = bool(get_value(conf_sections["output"], "GenerateNav", False))
 args.docs_basedir = get_value(conf_sections["output"], "DocsBasedir", "docs/")
 
-for i, section_name in enumerate(["tutorials", "how-tos", "explanations", "references"]):
+for i, section_name in enumerate(["tutorials", "howtos", "explanations", "references"]):
     # TODO cleaner solution
     value = get_value(conf_sections["naming"], value_id=section_name, default=section_name)
     if i == 0:

@@ -76,7 +76,7 @@ This section is on the top of the file, and defines options that affect the enti
 | GenerateNav   | (boolean) Whether to add internal navigation to the top of each generated file. Defaults to `False` |
 | DocsBasedir   | What folder to output the docs in. Defaults to `docs/` |
 | Tutorials     | Sets the output folder name for tutorials. Defaults to `tutorials`    |
-| How-tos       | Sets the output folder name for how-tos. Defaults to `how-tos`    |
+| Howtos        | Sets the output folder name for how-tos. Defaults to `how-tos`    |
 | explanations  | Sets the output folder name for explanations. Defaults to `explanations`    |
 | references    | Sets the output folder name for references. Defaults to `references`    |
 

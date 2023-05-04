@@ -37,9 +37,11 @@ def _make_and_get_sectiondir(repo_name, section: Union[str,Section]):
     return _join_paths_mkdir(_make_and_get_repodir(repo_name), section)
 
 
-def write_to_docs(repo_name: str, section: Union[str,Section], content: str, filename="README.md", replaceContent=False, prepend=False) -> str:
+def write_to_docs(repo_name: str, section_id: str, content: str, filename="README.md", replaceContent=False, prepend=False) -> str:
     """Add CONTENT to the generated documentation. Optionally creates the needed directories, replaces contents..."""
-    dir = _make_and_get_sectiondir(repo_name, section)
+    section_dirname = args.get_configured_section_name(section_id)
+
+    dir = _make_and_get_sectiondir(repo_name, section_dirname)
     full_filename = join(dir, filename)
     mode = "a+" if (not replaceContent) and (not prepend) else "w"
 
