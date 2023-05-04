@@ -5,6 +5,10 @@ from argparse import ArgumentParser
 
 """Code to handle configuration, through docs.conf or args"""
 
+class Args():
+    def __init__(self) -> None:
+        pass
+
 """ Command-line args """
 parser = ArgumentParser()
 

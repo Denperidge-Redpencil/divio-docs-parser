@@ -9,6 +9,18 @@ Automatically collect, aggregate and structure all your [divio-style documentati
     /references
 ```
 
+Or, if desired, Revision mode can be used!
+```
+/{reponame}
+    /0.0.1
+        /tutorials
+        /how-tos
+        /explanations
+        /references
+```
+
+On a basic level, this repo will only need a list of git url's!
+
 - Any input structure: this script will scan your entire repository for .md files
     - If you have a how-to section in your README, that'll get extracted and put in the right spot
     - Or, if you have an how-to.md file, it'll get added in its entirety!
@@ -60,7 +72,7 @@ If you want to know more about the design principles of this project, feel free 
 This section is on the top of the file, and defines options that affect the entire configuration
 | Parameter     | Functionality                    |
 | ------------- | -------------------------------- |
-| DefaultOwner | (string) Defines which user or org has to be checked for the repository in case its Path does not explicitly define an owner |
+| DefaultOwner  | (string) Defines which user or org has to be checked for the repository in case its Path does not explicitly define an owner |
 | GenerateNav   | (boolean) Whether to add internal navigation to the top of each generated file. Defaults to `False` |
 | DocsBasedir   | What folder to output the docs in. Defaults to `docs/` |
 | Tutorials     | Sets the output folder name for tutorials. Defaults to `tutorials`    |
