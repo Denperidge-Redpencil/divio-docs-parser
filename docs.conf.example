@@ -1,29 +1,20 @@
-[DEFAULT]
-DefaultOwner=Denperidge-Redpencil
-GenerateNav=True
-DocsBasedir=docs/
+[Output Configuration]
+writetodisk = True
+generatenav = True
+docsbasedir = docs/
 
-[divio-docs-gen]
-Path=divio-docs-gen
+[Naming Scheme]
+tutorials = Tutorials
+howtos = How-To
+explanations = Explanations
+references = Reference
 
-[mu-cl-resources]
-Path=Denperidge-Redpencil/mu-cl-resources
+[Repository Selection]
 
-[mu-project]
-Path=Denperidge-Redpencil/mu-project@master
+[https://github.com/mu-semtech/mu-cl-resources]
+url = https://github.com/mu-semtech/mu-cl-resources
 
-[mu-migrations-service]
-Path=mu-migrations-service@master
-
-[project]
-Path=project
+[https://github.com/denperidge-redpencil/project]
+url = https://github.com/denperidge-redpencil/project
 Move=documentation.md/references
-
-[mu-javascript-template]
-Path=mu-javascript-template
-
-[mu-ruby-template]
-Path=mu-ruby-template
-
-[ember-proxy-service]
-Path=ember-proxy-service
+Ignore=building-a-template.md//why-semantic-microservices.md
