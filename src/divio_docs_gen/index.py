@@ -1,17 +1,15 @@
-from .repo import Repo
-from .parse import parse_docs
+from .Repo import Repo
+from .parse import repo_to_divio_docs_entries
+from .Section import sections
 
 """Entrypoint for the application"""
 
-
-def markdown_to_divio_docs():
-    """When given a markdown string, parse and return the data, optionally writing to files"""
-    pass
-
 def main():
+    print("@@@")
+    print(sections)
     repo = Repo("https://github.com/mu-semtech/mu-cl-resources")
-    print(parse_docs(repo))
-
+    entry = repo_to_divio_docs_entries(repo, True)
+    entry.write_to_disk()
 
 
 if __name__ == "__main__":

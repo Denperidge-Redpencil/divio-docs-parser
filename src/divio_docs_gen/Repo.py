@@ -1,16 +1,10 @@
 # Native imports
 from glob import glob
-from os import mkdir, system, makedirs
+from os import makedirs
 from os.path import join, exists
-from shutil import rmtree
-from urllib import request, error
-from json import loads
-from zipfile import ZipFile
 # Local imports
-from .logging.table import log_and_print
 from git.repo import Repo as GitRepo
 from slugify import slugify
-from .parse import markdown_to_sections_dict
 
 """Repo class, including utilities to download Repository files"""
 
@@ -19,7 +13,7 @@ makedirs(repos_dir, exist_ok=True)
 
 class Repo():
     def __init__(self, url: str) -> None:
-        """Constructors a Repo class instance, applies configuration and downloads files"""
+        """Constructs a Repo class instance, applies configuration (TODO) and clones/pulls the repo"""
         #self.files_to_copy = []
         #self.files_to_ignore = []
         self.url = url
@@ -29,7 +23,11 @@ class Repo():
         else:
             self.gitpython = GitRepo(self.local_dir)
             self.gitpython.remotes[0].pull()
+
         
+    @property
+    def name(self) -> str:
+        return self.url.rsplit("/", maxsplit=1)[1].rsplit(".", maxsplit=1)[0]
 
     @property
     def exists_locally(self) -> bool:

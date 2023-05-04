@@ -1,7 +1,7 @@
 from re import search, RegexFlag, sub, escape
 from .args import args_section_names
 
-"""Defines section (how-to, getting started...) classes"""
+"""Defines section (how-to, getting started...) classes, without any customisation"""
 
 def regex(needle: r"str", haystack: str, flags):
     """Base regex helper"""
@@ -21,7 +21,7 @@ def regexIMS(needle: r"str", haystack: str):
     return regex(needle, haystack, RegexFlag.IGNORECASE | RegexFlag.MULTILINE | RegexFlag.S)
 
 class Section:
-    """Class to represent a Section (globally)"""
+    """Class to represent a Section"""
     def __init__(self, name: str, headertext: str, regex:r"str") -> None:
         self.name = name
         self.headertext = headertext

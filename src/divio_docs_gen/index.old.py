@@ -2,11 +2,11 @@
 from pathlib import Path
 
 # Local imports
-from .repo import get_repos, Repo, tmp_dir
+from .Repo import get_repos, Repo, tmp_dir
 from .colourstring import ok, nok
-from .sections import sections, SectionInRepo
+from .Section import sections, SectionInRepo
 from .table import setup_table, add_and_print, log_and_print, change_log_index
-from .docsgen import filepath_in_exceptions, write_to_docs, add_sibling_nav_to_files, generate_docs_nav_file, clear_docs, add_to_data_output
+from .write_to_disk import filepath_in_exceptions, write_to_docs, add_sibling_nav_to_files, generate_docs_nav_file, clear_docs, add_to_data_output
 from .args import args_repoconfigs, args_default_owner, args_generate_nav, args_write_to_disk, args_dont_remove_tmp
 
 """Entrypoint for the application"""
@@ -145,7 +145,7 @@ def generate_docs_for_repo(data_output: dict, repo: Repo, table_log_headers: lis
 
     return data_output
 
-def parse_docs() -> dict:
+def repo_docs_to_divio() -> dict:
     data_output = dict()
     
     # Get headers for CLI table
@@ -181,5 +181,5 @@ def parse_docs() -> dict:
 
 
 if __name__ == "__main__":
-    parse_docs()
+    repo_docs_to_divio()
 

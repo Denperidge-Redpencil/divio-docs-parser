@@ -4,12 +4,13 @@ from os import makedirs
 from shutil import rmtree
 from pathlib import Path
 from glob import glob
-from typing import Union
+from typing import Union, Dict
 
 # Local imports
-from .sections import Section
+from .Section import sections, Section
+from .Repo import Repo
 from .args import args_docs_basedir
-from .table import log_and_print, change_log_index
+#from .table import log_and_print, change_log_index
 
 """All code to help generate documentation"""
 
@@ -78,23 +79,6 @@ def add_to_data_output(data_output: dict, reponame: str, section_name: str, cont
     
     return data_output
 
-def write_to_docs(reponame: str, section: Union[str,Section], content: str, filename="README.md", replaceContent=False, prepend=False) -> str:
-    """Add CONTENT to the generated documentation. Optionally creates the needed directories, replaces contents..."""
-    dir = make_and_get_sectiondir(reponame, section)
-    full_filename = join(dir, filename)
-    mode = "a+" if (not replaceContent) and (not prepend) else "w"
-
-    if prepend:
-        with open(full_filename, "r", encoding="UTF-8") as file:
-            original_data = file.read(content)
-
-    with open(full_filename, mode, encoding="UTF-8") as file:
-        file.write(content)
-        if prepend:
-            file.write(original_data)
-    
-    # Return without 
-    return full_filename
 
 def markdown_parent_nav():
     """Create a markdown link that navigates to the parent"""
@@ -141,3 +125,27 @@ def generate_docs_nav_file(root: str, max_level: int, include_parent_nav = True,
             file.write(markdown_link_from_filepath(file_to_link, file_to_link))
     
 
+def output_dict_to_docs(repo: Repo, sections_dict: Dict[str, Dict[str, str]]):
+    for section_id in sections_dict:
+        print(sections_dict[section_id])
+        filename, content = sections_dict[section_id]
+        
+        write_to_docs(repo.name, section_id, content, filename)
+
+def write_to_docs(repo_name: str, section: Union[str,Section], content: str, filename="README.md", replaceContent=False, prepend=False) -> str:
+    """Add CONTENT to the generated documentation. Optionally creates the needed directories, replaces contents..."""
+    dir = make_and_get_sectiondir(repo_name, section)
+    full_filename = join(dir, filename)
+    mode = "a+" if (not replaceContent) and (not prepend) else "w"
+
+    if prepend:
+        with open(full_filename, "r", encoding="UTF-8") as file:
+            original_data = file.read(content)
+
+    with open(full_filename, mode, encoding="UTF-8") as file:
+        file.write(content)
+        if prepend:
+            file.write(original_data)
+    
+    # Return without 
+    return full_filename
