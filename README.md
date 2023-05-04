@@ -4,19 +4,9 @@ Automatically collect, aggregate and structure all your [divio-style documentati
 ```
 /{reponame}
     /tutorials
-    /how-tos
+    /howtos
     /explanations
     /references
-```
-
-Or, if desired, Revision mode can be used!
-```
-/{reponame}
-    /0.0.1
-        /tutorials
-        /how-tos
-        /explanations
-        /references
 ```
 
 On a basic level, this repo will only need a list of git url's!
@@ -63,6 +53,17 @@ The Divio structure is built upon splitting your documentation into 4 types of d
 
 
 If you want to know more about the design principles of this project, feel free to check out my writeup [here](https://github.com/Denperidge-Redpencil/Learning.md/blob/main/Notes/docs.md#design-principles)!
+
+Further expansion could be done to this project. For example, a structure like the following...
+```
+/{reponame}
+    /0.0.1
+        /tutorials
+        /how-tos
+        /explanations
+        /references
+```
+... should not be impossible to achieve with some tweaking!
 
 
 ## Reference

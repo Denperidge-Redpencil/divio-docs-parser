@@ -1,6 +1,6 @@
 [project]
 name = "divio_docs_gen"
-version = "0.0.4"
+version = "0.0.5"
 authors = [
     { name="Denperidge", email="denperidge@gmail.com" },
 ]
@@ -22,7 +22,7 @@ classifiers = [
 "Bug Tracker" = "https://github.com/Denperidge-Redpencil/divio-docs-gen/issues"
 
 [project.scripts]
-divio_docs_gen = "divio_docs_gen:generate_docs"
+divio_docs_gen = "divio_docs_gen:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
