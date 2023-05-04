@@ -2,6 +2,7 @@ __pycache__
 docs.conf
 docs/
 tmp/
+repos/
 
 # Package build
 dist/

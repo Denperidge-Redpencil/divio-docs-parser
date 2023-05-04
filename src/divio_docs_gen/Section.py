@@ -1,5 +1,5 @@
 from re import search, RegexFlag, sub, escape
-from .args import args_section_names
+from .Args import args
 
 """Defines section (how-to, getting started...) classes"""
 
@@ -21,75 +21,65 @@ def regexIMS(needle: r"str", haystack: str):
     return regex(needle, haystack, RegexFlag.IGNORECASE | RegexFlag.MULTILINE | RegexFlag.S)
 
 class Section:
-    """Class to represent a Section (globally)"""
-    def __init__(self, name: str, headertext: str, regex:r"str") -> None:
+    """Class to represent a Section"""
+    def __init__(self, name: str, regex:r"str") -> None:
         self.name = name
-        self.headertext = headertext
         self.regex = regex
     
     @property
-    def regexMdHeader(self):
+    def regex_with_md_header(self):
         """Returns the regex to find this section, accounting for Markdown headers"""
         return r"^#.*" + self.regex
     
 
-    def find_in(self, haystack: str, header = False) -> str:
+    def find_in(self, haystack: str, search_using_markdown_header = False) -> str:
         """Returns the contents of this section from a string"""
-        needle = self.regex if not header else self.regexMdHeader
+        needle = self.regex if not search_using_markdown_header else self.regex_with_md_header
         return regexIM(needle, haystack)
     
-    def found_in(self, haystack: str, header = False) -> bool:
+    def found_in(self, haystack: str, search_using_markdown_header = False) -> bool:
         """Returns True if this section can be found in a string"""
-        return bool(self.find_in(haystack, header))
-
-
-class RepoSection:
-    """Class to represent a Section (in a given repo)"""
-    def __init__(self, section: Section) -> None:
-        self.section = section
-        # sourceContent is the string in which to find the repo section
-        self.sourceContent = str()
+        return bool(self.find_in(haystack, search_using_markdown_header))
     
-    @property
-    def header(self):
-        """Return the contents of this sections' header"""
-        return self.section.find_in(self.sourceContent, header=True).group()
 
-    @property
-    def headertags(self):
+
+     
+    def _get_section_header_from_string(self, input_string: str):
+        """Return the unparsed contents of this sections' header"""
+        return self.find_in(input_string, search_using_markdown_header=True).group()
+
+    def get_header_tags_from_string(self, input_string: str):
         """
         Get the markdown header tags from this header
 
         Example output: ###
         """
         # 
+
         try:
-            return regexIM(r"#*\W", self.header).group()
+            return regexIM(r"#*\W", self._get_section_header_from_string(input_string)).group()
         except AttributeError:
             return None
     
-    # This will return everything between 
-    @property
-    def sectionContent(self):
-        """Find and return everything between the sections header, and the header of the next section"""
+    def _get_content_from_string(self, input_string: str):
+        """Find and return everything between the section header and the header of the next section"""
         # Okay, extracting the content will be a bit complex
         # The regex will contain 3 parts/groups
         # Group 1: the header of the section 
-        regex = r"(^" + escape(self.header) + ")" # Start of line, header, end of line
+        regex = r"(^" + escape(self._get_section_header_from_string(input_string)) + ")" # Start of line, header, end of line
         regex += "(.*)" # All content in between the section header and...
-        regex += escape(self.headertags) + "(\s|\w)"  # The next header of the same size
+        regex += escape(self.get_header_tags_from_string(input_string)) + "(\s|\w)"  # The next header of the same size
         try:
-            return regexIMS(regex, self.sourceContent).groups()[1]  # Use the S flag
+            return regexIMS(regex, input_string).groups()[1]  # Use the S flag
         except AttributeError:
             # If the regex fails, its possible there is no following header
             # TODO cleaner solution
-            regex = r"(^" + escape(self.header) + ")" # Start of line, header, end of line
+            regex = r"(^" + escape(self._get_section_header_from_string(input_string)) + ")" # Start of line, header, end of line
             regex += "(.*)" # All content in between the section header and...
-            return regexIMS(regex, self.sourceContent).groups()[1]  # Use the S flag
+            return regexIMS(regex, input_string).groups()[1]  # Use the S flag
     
-    @property
-    def output(self) -> str:
-        """Outputs the section content with the correct headers"""
+    def extract_and_parse_section_from_string(self, input_string: str) -> str:
+        """Extracts and parses the section content from a string, returning a new string with corrected header tags"""
         # Now we have the unparsed section content,
         # but the headers are all still based on the old file. And our header isn't there!
 
@@ -101,10 +91,10 @@ class RepoSection:
 
         #print(self.sourceContent)
         #print(self.section.name)
-        originalBaseHeaderlevel = self.headertags.count('#')  # Example output: 3
+        originalBaseHeaderlevel = self.get_header_tags_from_string(input_string).count('#')  # Example output: 3
         lowerEveryHeaderlevelBy = originalBaseHeaderlevel - 1  # Example output: 2
 
-        output = self.header + self.sectionContent  # Add the original header
+        output = self._get_section_header_from_string(input_string) + self._get_content_from_string(input_string)  # Add the original header
 
 
         header_regex = r"^#*"
@@ -123,15 +113,14 @@ class RepoSection:
         return output
 
         
-        
     
 
 """Section definitions. This is where you can customise synonyms"""
 sections = {
-    "tutorials": Section(args_section_names["tutorials"], " tutorials ", r"(tutorial|getting\W*started)"),
-    "howtos": Section(args_section_names["how-tos"], "how to's", r"(how\W*to|guide|usage)"),
-    "explanations": Section(args_section_names["explanations"], "explanation(s)", r"(explanation|discussion|background\W*material)"),
-    "references": Section(args_section_names["references"], "reference(s)", r"(reference|technical)")
+    "tutorials": Section(args.tutorials,       r"(tutorial|getting\W*started)"),
+    "howtos": Section(args.howtos,             r"(how\W*to|guide|usage)"),
+    "explanations": Section(args.explanations, r"(explanation|discussion|background\W*material)"),
+    "references": Section(args.references,     r"(reference|technical)")
 }
 
 

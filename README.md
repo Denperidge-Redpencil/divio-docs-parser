@@ -4,10 +4,12 @@ Automatically collect, aggregate and structure all your [divio-style documentati
 ```
 /{reponame}
     /tutorials
-    /how-tos
+    /howtos
     /explanations
     /references
 ```
+
+On a basic level, this repo will only need a list of git url's!
 
 - Any input structure: this script will scan your entire repository for .md files
     - If you have a how-to section in your README, that'll get extracted and put in the right spot
@@ -52,6 +54,17 @@ The Divio structure is built upon splitting your documentation into 4 types of d
 
 If you want to know more about the design principles of this project, feel free to check out my writeup [here](https://github.com/Denperidge-Redpencil/Learning.md/blob/main/Notes/docs.md#design-principles)!
 
+Further expansion could be done to this project. For example, a structure like the following...
+```
+/{reponame}
+    /0.0.1
+        /tutorials
+        /how-tos
+        /explanations
+        /references
+```
+... should not be impossible to achieve with some tweaking!
+
 
 ## Reference
 
@@ -60,11 +73,11 @@ If you want to know more about the design principles of this project, feel free 
 This section is on the top of the file, and defines options that affect the entire configuration
 | Parameter     | Functionality                    |
 | ------------- | -------------------------------- |
-| DefaultOwner | (string) Defines which user or org has to be checked for the repository in case its Path does not explicitly define an owner |
+| DefaultOwner  | (string) Defines which user or org has to be checked for the repository in case its Path does not explicitly define an owner |
 | GenerateNav   | (boolean) Whether to add internal navigation to the top of each generated file. Defaults to `False` |
 | DocsBasedir   | What folder to output the docs in. Defaults to `docs/` |
 | Tutorials     | Sets the output folder name for tutorials. Defaults to `tutorials`    |
-| How-tos       | Sets the output folder name for how-tos. Defaults to `how-tos`    |
+| Howtos        | Sets the output folder name for how-tos. Defaults to `how-tos`    |
 | explanations  | Sets the output folder name for explanations. Defaults to `explanations`    |
 | references    | Sets the output folder name for references. Defaults to `references`    |
 
@@ -75,17 +88,16 @@ You can add as many of these as you want. Each one represents a repo you want pa
 | Parameter | Functionality                              |
 | --------- | ------------------------------------------ |
 | Path      | (string) Defines which repository to parse |
-| Copy      | (array) Files in the repository that should be copied to a specific section. Syntax: `file.md/sectionname,file2.md/sectionname` |
-| Ignore      | (array) Files in the repository that should be ignored. Syntax: `file.md,file2.md` |
+| Move      | (string) Files in the repository that should be copied to a specific section. Syntax: `docs/file.md/section_id//file2.md/section_id/output_filename` |
+| Ignore      | (string) Files in the repository that should be ignored. Syntax: `file.md//file2.md` |
 
-*Note: for `Copy` and `Ignore` you can choose to be more specific by writing `sub/folder/filename.md`. The check is a `provided_path in full_filepath`, so `sub/folder/filename.md` will apply to `even/further/sub/folder/filename.md`.*
 
-##### Allowed Path syntax
-You can use any of the following!
-- `reponame` (if DefaultOwner is defined)
-- `reponame@branch` (if DefaultOwner is defined)
-- `owner/reponame`
-- `owner/reponame@branch`
+**Example Ignore:** `Ignore=building-a-template.md//why-semantic-microservices.md`
+**Example Move:** `Move=documentation.md/references`
+
+
+*Note: for `Move` and `Ignore` you can choose to be more specific by writing `sub/folder/filename.md`. The check is a `provided_path in full_filepath`, so `sub/folder/filename.md` will apply to `even/further/sub/folder/filename.md`.*
+
 
 
 
