@@ -1,20 +1,13 @@
 # Native imports
 from os.path import exists, join
 from shutil import rmtree
-from typing import Union, Dict
-
-from ..args import args_docs_basedir
-from .utils import _join_paths_mkdir
-
+from typing import Union
 
 # Local imports
-from ..Section import Section
-from ..Repo import Repo
-from ..args import args_docs_basedir, args_generate_nav
-#from .table import log_and_print, change_log_index
-
 from .utils import _join_paths_mkdir
-from .nav import add_nav_header_to_all_docs, generate_basedir_nav
+from ..args import args_docs_basedir
+from ..Section import Section
+from .nav import generate_nav_as_needed  # Import for export
 
 """Functions to assist in writing docs to disk"""
 
@@ -62,9 +55,4 @@ def write_to_docs(repo_name: str, section: Union[str,Section], content: str, fil
     # Return without 
     return full_filename
 
-
-def generate_nav_if_needed():
-    if args_generate_nav:
-        add_nav_header_to_all_docs()
-        generate_basedir_nav()
 

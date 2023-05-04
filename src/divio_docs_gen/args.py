@@ -87,7 +87,6 @@ def get_conf_value(section_id, value_id):
     return conf[section_id][value_id] if value_id in conf[section_id] else ""
 
 def get_arg_value(value_id):
-    (args)
     return getattr(args, value_id) if hasattr(args, value_id) else None
 
 def get_value(section_id, value_id, default):

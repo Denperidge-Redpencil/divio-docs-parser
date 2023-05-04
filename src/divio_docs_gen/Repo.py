@@ -6,7 +6,7 @@ from os.path import join, exists
 from git.repo import Repo as GitRepo
 from slugify import slugify
 
-"""Repo class, including utilities to download Repository files"""
+"""Repo class: utilities to clone/pull the repoand access the files"""
 
 repos_dir = "repos/"
 makedirs(repos_dir, exist_ok=True)

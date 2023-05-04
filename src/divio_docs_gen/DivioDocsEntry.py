@@ -1,13 +1,14 @@
-
-from .Section import sections, Section
+# Native imports
 from typing import Dict
 from os.path import exists
 from pathlib import Path
-from .write_to_disk import write_to_docs
-from .Repo import Repo
-from .args import args_write_to_disk
 
-"""Everything concerning creating DivioDocsEntry objects: extracting sections from the Repo's markdown files"""
+# Local imports
+from .Repo import Repo
+from .Section import sections
+from .write_to_disk import write_to_docs
+
+"""Everything concerning creating DivioDocsEntry objects. This class extracts sections from a Repo's markdown files and structures it"""
 
 class DivioDocsEntry():
     """This represents a divio docs entry: all the docs for a repo, correctly structured. Contains section, filenames and their contents"""
@@ -38,27 +39,27 @@ class DivioDocsEntry():
                 write_to_docs(self.repo.name, section_id, content=section[filename], filename=filename)
     
     def import_from_markdown(self, path_or_string: str, filename="README.md"):
-        parsed_file = _split_sections_from_markdown(path_or_string)
+        parsed_file = split_sections_from_markdown(path_or_string)
         for section_id in parsed_file:
             self.add_to_repo_section(section_id, filename, parsed_file[section_id])
     
     
 
 def _split_sections_from_markdown_file(path: str) -> Dict[str, str]:
-    """(Private function) File-based wrapper for _split_sections_from_markdown_string"""
+    """Wrapper for _split_sections_from_markdown_string; reads the file in the passed path and sends it to _split_sections_from_markdown_string"""
     with open(path, "r", encoding="UTF-8") as file:
         data = file.read()
     return _split_sections_from_markdown_string(data)
 
 def _split_sections_from_markdown_string(input_string: str, filename="") -> Dict[str, str]:
-    """(Private function) Parses a markdown string, returning a dict {section_id: section_content}"""
+    """Parses a markdown string, returning a dict {section_id: section_content}"""
     markdown_sections = dict()
 
 
     for section_id in sections:
         section = sections[section_id]
         
-        section_in_content = section.found_in(input_string, header=True)
+        section_in_content = section.found_in(input_string, search_using_markdown_header=True)
         section_in_filename =  section.found_in(filename)
 
         found = section_in_content or section_in_filename
@@ -72,8 +73,8 @@ def _split_sections_from_markdown_string(input_string: str, filename="") -> Dict
     return markdown_sections
 
 
-def _split_sections_from_markdown(path_or_string: str):
-    """Parses a markdown file or string. Returns a dictionary of { section_id: content }"""
+def split_sections_from_markdown(path_or_string: str):
+    """Parses the passed markdown file or string. Returns { section_id: content }"""
     if exists(path_or_string):
         return _split_sections_from_markdown_file(path_or_string)
     else:
@@ -81,7 +82,7 @@ def _split_sections_from_markdown(path_or_string: str):
 
 
 def _get_repo_docs(repo: Repo, write_to_disk=False) -> DivioDocsEntry:
-    """Parses all markdown files in a repo for all sections. Returns a DivioDocsEntry object"""
+    """Parses all markdown files in a Repo for all sections. Returns a DivioDocsEntry object"""
     entry = DivioDocsEntry(repo)
 
     for file in repo.all_markdown_files:
