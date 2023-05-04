@@ -36,12 +36,6 @@ ouptut_config.add_argument("--write-to-disk", "--write",
                            action="store_true",
                            default=None,
                            )
-ouptut_config.add_argument("--dont-remove-tmp", "--tmp",
-                           dest="DontRemoveTmp",
-                           help="When used, the tmp/ folder does not get deleted",
-                           action="store_true",
-                           default=None,
-                           )
 
 naming_scheme = parser.add_argument_group(conf_sections["naming"])
 for section_key in ["tutorials", "how-tos", "explanations", "references"]:
@@ -52,15 +46,12 @@ for section_key in ["tutorials", "how-tos", "explanations", "references"]:
                         )
 
 repo_selection = parser.add_argument_group(conf_sections["repos"])
-repo_selection.add_argument("--defaultowner", "--owner", "-do", "-o", 
-                    dest="DefaultOwner",
-                    help="Defines which user or org has to be checked for the repository in case its Path does not explicitly define an owner")
-
 repo_selection.add_argument("--repo",
                             help="""
                             Configures if/how a repo should be parsed
+                            This can be defined multiple times
 
-                            Syntax: OWNER/REPO_NAME [options]
+                            Syntax: --repo git_url
                             Example: denperidge-redpencil/project move=docs/reference/documentation.md
 
                             If none are defined, all repos will be used.
@@ -115,11 +106,9 @@ def get_value(section_id, value_id, default):
         
     return value
 
-args_default_owner = get_value(conf_sections["repos"], "DefaultOwner", None)  # Used as default repo owner
 args_write_to_disk = bool(get_value(conf_sections["output"], "WriteToDisk", False))
 args_generate_nav = bool(get_value(conf_sections["output"], "GenerateNav", False))
 args_docs_basedir = get_value(conf_sections["output"], "DocsBasedir", "docs/")
-args_dont_remove_tmp = bool(get_value(conf_sections["output"], "DontRemoveTmp", False))
 
 args_section_names = dict()
 for section_name in ["tutorials", "how-tos", "explanations", "references"]:
@@ -129,12 +118,12 @@ args_repoconfigs = []
 if get_arg_value("repos"):
     for repo_arg in get_arg_value("repos"):
         repo = dict()
-        repo["path"] = repo_arg[0]
+        repo["url"] = repo_arg[0]
         for arg in repo_arg[1:]:
             key, value = arg.split("=", 1)
             repo[key] = value
         args_repoconfigs.append(repo)
-        conf[repo["path"]] = repo
+        conf[repo["url"]] = repo
     
 if use_conf:
     all_conf_sections = conf.sections()

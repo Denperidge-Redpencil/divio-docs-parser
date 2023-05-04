@@ -43,6 +43,10 @@ def add_nav_header_to_all_docs(include_parent_nav = True):
     doc_files = glob(args_docs_basedir + "/**/*.md", recursive=True)
     add_nav_header_to_files(doc_files)
 
+    repos = glob(args_docs_basedir + "/*", recursive=False)
+    for repo in [repo.replace(args_docs_basedir, "") for repo in repos]:
+        generate_repo_nav(repo)
+
 def generate_docs_nav_file(subdirectory: str, max_level: int, include_parent_nav = True, filename="README.md"):
     """Create a file purely for navigation"""
     base_path = args_docs_basedir + subdirectory
@@ -54,5 +58,8 @@ def generate_docs_nav_file(subdirectory: str, max_level: int, include_parent_nav
             file_to_link = file_to_link.replace(base_path, "").lstrip("/")
             file.write(_markdown_link_from_filepath(file_to_link, file_to_link))
 
-def create_top_level_nav():
+def generate_basedir_nav():
     generate_docs_nav_file("", 1, include_parent_nav=False)
+
+def generate_repo_nav(repo_name):
+    generate_docs_nav_file(repo_name, 1)
