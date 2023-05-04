@@ -39,12 +39,12 @@ class Repo():
 
     @property
     def local_dir(self) -> str:
-        """Returns path to temporarily downloaded files"""
+        """Returns path to local files for the repo"""
         # Follows GitHub zip file naming
         return f"{repos_dir}/{self.slug}"
     
     def get_file(self, path) -> str:
-        """Returns the path to a file, automatically prefixing the tmp_files path if needed"""
+        """Returns the path to a file, automatically prefixing the repos dir path if needed"""
         if path.startswith(self.local_dir):
             return path
         return join(self.local_dir, path)

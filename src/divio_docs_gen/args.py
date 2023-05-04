@@ -5,10 +5,6 @@ from argparse import ArgumentParser
 
 """Code to handle configuration, through docs.conf or args"""
 
-class Args():
-    def __init__(self) -> None:
-        pass
-
 """ Command-line args """
 parser = ArgumentParser()
 
@@ -100,7 +96,7 @@ def get_conf_value(section_id, value_id):
     return conf[section_id][value_id] if value_id in conf[section_id] else ""
 
 def get_arg_value(value_id):
-    print(args)
+    (args)
     return getattr(args, value_id) if hasattr(args, value_id) else None
 
 def get_value(section_id, value_id, default):
@@ -128,7 +124,6 @@ args_dont_remove_tmp = bool(get_value(conf_sections["output"], "DontRemoveTmp", 
 args_section_names = dict()
 for section_name in ["tutorials", "how-tos", "explanations", "references"]:
     args_section_names[section_name] = get_value(conf_sections["naming"], value_id=section_name, default=section_name).lower()
-print(args_section_names)
 
 args_repoconfigs = []
 if get_arg_value("repos"):

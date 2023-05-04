@@ -1,56 +1,20 @@
 # Native imports
 from pathlib import Path
 
+from .write_to_disk.nav import add_nav_header_to_files, generate_docs_nav_file
+
 # Local imports
 from .Repo import get_repos, Repo, tmp_dir
 from .colourstring import ok, nok
 from .Section import sections, SectionInRepo
 from .table import setup_table, add_and_print, log_and_print, change_log_index
-from .write_to_disk import filepath_in_exceptions, write_to_docs, add_sibling_nav_to_files, generate_docs_nav_file, clear_docs, add_to_data_output
+from .write_to_disk import filepath_in_exceptions, write_to_docs, clear_docs, add_to_data_output
 from .args import args_repoconfigs, args_default_owner, args_generate_nav, args_write_to_disk, args_dont_remove_tmp
 
 """Entrypoint for the application"""
 
 def readme_to_sections():
     pass
-
-
-def get_repo_list(username):
-    """Gets repos from the supplied username, and uses args to determine which to get. Returns a List of Repo objects"""
-    
-    log_and_print("Collecting Repo data...")
-    change_log_index(+1)
-
-    log_and_print(f"Fetching all repos from {args_default_owner}...")
-    change_log_index(+1)
-    # Get repo data
-    repos_data = get_repos(username)
-    
-    
-    change_log_index(-1)
-    log_and_print("... collected all repo data")
-
-    # If repo paths have been defined in docs.conf, use those
-    if len(args_repoconfigs) > 0:
-        log_and_print("Using repo paths defined in config")
-        repos: list = [ Repo(repos_data, config=repoconfig) for repoconfig in args_repoconfigs ]
-    
-    # If no repo paths have been defined in docs.conf, use all repos from a specific owner
-    elif username:
-        log_and_print(f"username defined, but no repo paths. Adding all repos owned by {username}")
-        # If user is defined but no specific repos, get repos from GitHub API
-        repos = [Repo(repos_data, reponame=repo['name'], owner=username, branch=repo['default_branch']) for repo in repos_data]
-    
-    # However, if no paths NOR default owner has been specified, exit
-    else:
-        err_msg = "Either username has/repo Paths have to be defined"
-        log_and_print(err_msg)
-        raise ValueError(err_msg)
-
-    change_log_index(-1)
-    log_and_print("... collected Repo data")
-    
-    return repos
 
 def generate_docs_for_repo(data_output: dict, repo: Repo, table_log_headers: list=None):
     """
@@ -137,7 +101,7 @@ def generate_docs_for_repo(data_output: dict, repo: Repo, table_log_headers: lis
     
     # If a nav has to be created, do that
     if args_write_to_disk and args_generate_nav and len(created_files) > 0:
-        add_sibling_nav_to_files(created_files)
+        add_nav_header_to_files(created_files)
         generate_docs_nav_file(repo.name, 1)
     print()
     change_log_index(-1)
