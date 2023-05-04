@@ -8,16 +8,6 @@ from .Args import args
 
 """Entrypoint for the application"""
 
-class DivioDocsGen():
-    def __init__(self) -> None:
-        pass
-
-def main():
-    """When this package is run directly, clear any existing docs and generate new ones based on args"""
-    clear_docs()
-    _docs_from_configured_repos()
-
-
 def _docs_from_configured_repos():
     """Generate docs from configured repos"""
     for repoconfig in args.repos:
@@ -38,6 +28,10 @@ def docs_from_repos(git_urls: List[str]):
         docs_from_repo(url)
     generate_nav_as_needed()
     
+def main():
+    """When this package is run directly, clear any existing docs and generate new ones based on args"""
+    clear_docs()
+    _docs_from_configured_repos()
 
 if __name__ == "__main__":
     main()
