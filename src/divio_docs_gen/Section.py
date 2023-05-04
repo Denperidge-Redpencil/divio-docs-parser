@@ -1,5 +1,5 @@
 from re import search, RegexFlag, sub, escape
-from .args import args_section_names
+from .Args import args
 
 """Defines section (how-to, getting started...) classes"""
 
@@ -117,10 +117,10 @@ class Section:
 
 """Section definitions. This is where you can customise synonyms"""
 sections = {
-    "tutorials": Section(args_section_names["tutorials"],       r"(tutorial|getting\W*started)"),
-    "howtos": Section(args_section_names["how-tos"],            r"(how\W*to|guide|usage)"),
-    "explanations": Section(args_section_names["explanations"], r"(explanation|discussion|background\W*material)"),
-    "references": Section(args_section_names["references"],     r"(reference|technical)")
+    "tutorials": Section(args.tutorials,       r"(tutorial|getting\W*started)"),
+    "howtos": Section(args.howtos,             r"(how\W*to|guide|usage)"),
+    "explanations": Section(args.explanations, r"(explanation|discussion|background\W*material)"),
+    "references": Section(args.references,     r"(reference|technical)")
 }
 
 

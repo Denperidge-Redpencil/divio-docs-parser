@@ -5,7 +5,7 @@ from os.path import join
 from pathlib import Path
 
 # Local imports
-from ..args import args_docs_basedir, args_generate_nav
+from ..Args import args
 from .utils import _markdown_link_from_filepath, _markdown_link_to_parent
 
 """Functions to generate navigation headers"""
@@ -18,7 +18,7 @@ def _create_nav_file(subdirectory: str, max_level: int, include_parent_nav = Tru
     
     If include_parent_nav is True, adds a ../ link
     """
-    base_path = args_docs_basedir + subdirectory
+    base_path = args.docs_basedir + subdirectory
     files_to_link = glob(base_path + "/*" * max_level)
     with open(join(base_path, filename), "w", encoding="UTF-8") as file:
         if include_parent_nav:
@@ -65,16 +65,16 @@ def _generate_repo_nav_file(repo_name, include_parent_nav = True):
 
 def add_nav_to_all_repo_docs(include_parent_nav = True):
     """Adds nav headers to every generated .md file, generates repo nav files and a basedir file. If include_parent_nav is True, adds ../ links"""
-    doc_files = glob(args_docs_basedir + "/**/*.md", recursive=True)
+    doc_files = glob(args.docs_basedir + "/**/*.md", recursive=True)
     _add_nav_header_to_files(doc_files, include_parent_nav)
 
-    repos = glob(args_docs_basedir + "/*", recursive=False)
-    for repo_name in [repo.replace(args_docs_basedir, "") for repo in repos]:
+    repos = glob(args.docs_basedir + "/*", recursive=False)
+    for repo_name in [repo.replace(args.docs_basedir, "") for repo in repos]:
         _generate_repo_nav_file(repo_name, include_parent_nav)
     
     _generate_basedir_nav_file()
 
 def generate_nav_as_needed():
     """Will generate nav if generate_nav is configured, otherwise does nothing"""
-    if args_generate_nav:
+    if args.generate_nav:
         add_nav_to_all_repo_docs()

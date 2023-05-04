@@ -4,9 +4,13 @@ from typing import List
 from .Repo import Repo
 from .DivioDocsEntry import _get_repo_docs
 from .write_to_disk import clear_docs, generate_nav_as_needed
-from .args import args_write_to_disk, args_repoconfigs
+from .Args import args
 
 """Entrypoint for the application"""
+
+class DivioDocsGen():
+    def __init__(self) -> None:
+        pass
 
 def main():
     """When this package is run directly, clear any existing docs and generate new ones based on args"""
@@ -16,13 +20,13 @@ def main():
 
 def _docs_from_configured_repos():
     """Generate docs from configured repos"""
-    for repoconfig in args_repoconfigs:
+    for repoconfig in args.repos:
         docs_from_repo(repoconfig["url"])
     
     generate_nav_as_needed()
 
 
-def docs_from_repo(git_url: str, write_to_disk=args_write_to_disk):
+def docs_from_repo(git_url: str, write_to_disk=args.write_to_disk):
     """Generate documentation from the passed git url. This function does NOT automatically create nav files; make sure to run generate_nav_if_needed if desired"""
     repo = Repo(git_url)
     return _get_repo_docs(repo, write_to_disk=write_to_disk)

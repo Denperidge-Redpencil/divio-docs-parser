@@ -5,7 +5,7 @@ from typing import Union
 
 # Local imports
 from .utils import _join_paths_mkdir
-from ..args import args_docs_basedir
+from ..Args import args
 from ..Section import Section
 from .nav import generate_nav_as_needed  # Import for export
 
@@ -14,8 +14,8 @@ from .nav import generate_nav_as_needed  # Import for export
 
 def clear_docs():
     """Removes previously generated docs"""
-    if exists(args_docs_basedir):
-        rmtree(args_docs_basedir)
+    if exists(args.docs_basedir):
+        rmtree(args.docs_basedir)
 
 def filepath_in_exceptions(exceptioned_files: list, filepath: str):
     """Check if an alternative action has to be taken for a file"""
@@ -27,7 +27,7 @@ def filepath_in_exceptions(exceptioned_files: list, filepath: str):
 
 def _make_and_get_repodir(repo_name):
     """Create a directory for the repository in the docs basedir"""
-    return _join_paths_mkdir(args_docs_basedir, repo_name)
+    return _join_paths_mkdir(args.docs_basedir, repo_name)
    
 def _make_and_get_sectiondir(repo_name, section: Union[str,Section]):
     """Create a directory for the section in the repository's folder"""
