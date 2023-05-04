@@ -25,15 +25,11 @@ class DivioDocsEntry():
             return
         
         print(filename)
-        copy = self.repo.check_copy_file(filename)
-        if copy:
-            print(copy)
-            copy_filename, copy_dest = copy.rsplit("/", 1)
-            print("copy")
-            print()
-            #copy_filename = Path(copy_filename).name # The selector can be a path, but only the filename should be kept for handling
-            # Copy=documentation.md/references
-            section_id = copy_dest
+        move = self.repo.check_move_file(filename)
+        if move:
+            move_filename, move_dest = move.rsplit("/", 1)
+            #move_filename = Path(move_filename).name # The selector can be a path, but only the filename should be kept for handling
+            section_id = move_dest
 
 
         try:
@@ -84,8 +80,6 @@ def _split_sections_from_markdown_string(input_string: str, filename="") -> Dict
 
         if found:
             markdown_sections[section_id] = section.extract_and_parse_section_from_string(input_string)
-
-        # TODO implement copy & ignore
     
     return markdown_sections
 

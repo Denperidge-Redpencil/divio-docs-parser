@@ -106,8 +106,8 @@ repo_selection.add_argument("--repo",
 
                             If none are defined, all repos will be used.
                             Options:
-                            - Copy (array): Files in the repository that should be copied to a specific section. Syntax: move=file.md/sectionname,file2.md/sectionname
-                            - Ignore (array) Files in the repository that should be ignored. Syntax: move=file.md,file2.md
+                            - Move: Files in the repository that should be copied to a specific section. Syntax: move=file.md/sectionname///file2.md/sectionname
+                            - Ignore: Files in the repository that should be ignored. Syntax: ignore=file.md//file2.md
                             """,
                             action="append",
                             dest="repos",
@@ -177,9 +177,9 @@ if get_cli_arg_value("repos"):
             key, value = arg.split("=", 1)
             key = key.lower()
             if "ignore" in key:
-                repo.files_to_ignore.append(value)
-            elif "copy" in key:
-                repo.files_to_copy.append(value) 
+                repo.files_to_ignore += value.split("//")
+            elif "move" in key:
+                repo.files_to_move += value.split("//") 
 
         args.repos.append(repo)
         conf[repo["url"]] = repo
@@ -194,10 +194,9 @@ if use_conf:
         repo = Repo(repo_data["url"])
         
         if "ignore" in repo_data:
-            repo.files_to_ignore.append(repo_data["ignore"])
-        if "copy" in repo_data:
-            repo.files_to_copy.append(repo_data["copy"])
-            
+            repo.files_to_ignore += repo_data["ignore"].split("//")
+        if "move" in repo_data:
+            repo.files_to_move += repo_data["move"].split("//")
 
         if repo not in args.repos:
             args.repos.append(repo)

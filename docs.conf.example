@@ -17,7 +17,7 @@ Path=mu-migrations-service@master
 
 [project]
 Path=project
-Copy=documentation.md/references
+Move=documentation.md/references
 
 [mu-javascript-template]
 Path=mu-javascript-template

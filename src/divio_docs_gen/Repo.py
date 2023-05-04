@@ -13,11 +13,11 @@ repos_dir = "repos/"
 makedirs(repos_dir, exist_ok=True)
 
 class Repo():
-    def __init__(self, url: str, files_to_copy: List[str] = [], files_to_ignore: List[str] = []) -> None:
+    def __init__(self, url: str, files_to_move: List[str] = [], files_to_ignore: List[str] = []) -> None:
         """Constructs a Repo class instance, applies configuration and clones/pulls the repo"""
         self.url = url
 
-        self.files_to_copy = files_to_copy
+        self.files_to_move = files_to_move
         self.files_to_ignore = files_to_ignore
 
         if not self.exists_locally:
@@ -76,8 +76,8 @@ class Repo():
     def check_ignore_file(self, filepath: str):
         return self._file_in_exceptions(self.files_to_ignore, filepath)
     
-    def check_copy_file(self, filepath: str):
-        return self._file_in_exceptions(self.files_to_copy, filepath)
+    def check_move_file(self, filepath: str):
+        return self._file_in_exceptions(self.files_to_move, filepath)
 
     def _file_in_exceptions(self, exceptioned_files: list, filepath: str):
         """Check if an alternative action has to be taken for a file"""

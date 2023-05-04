@@ -87,17 +87,16 @@ You can add as many of these as you want. Each one represents a repo you want pa
 | Parameter | Functionality                              |
 | --------- | ------------------------------------------ |
 | Path      | (string) Defines which repository to parse |
-| Copy      | (array) Files in the repository that should be copied to a specific section. Syntax: `file.md/sectionname,file2.md/sectionname` |
-| Ignore      | (array) Files in the repository that should be ignored. Syntax: `file.md,file2.md` |
+| Move      | (string) Files in the repository that should be copied to a specific section. Syntax: `docs/file.md/section_id//file2.md/section_id/output_filename` |
+| Ignore      | (string) Files in the repository that should be ignored. Syntax: `file.md//file2.md` |
 
-*Note: for `Copy` and `Ignore` you can choose to be more specific by writing `sub/folder/filename.md`. The check is a `provided_path in full_filepath`, so `sub/folder/filename.md` will apply to `even/further/sub/folder/filename.md`.*
 
-##### Allowed Path syntax
-You can use any of the following!
-- `reponame` (if DefaultOwner is defined)
-- `reponame@branch` (if DefaultOwner is defined)
-- `owner/reponame`
-- `owner/reponame@branch`
+**Example Ignore:** `Ignore=building-a-template.md//why-semantic-microservices.md`
+**Example Move:** `Move=documentation.md/references`
+
+
+*Note: for `Move` and `Ignore` you can choose to be more specific by writing `sub/folder/filename.md`. The check is a `provided_path in full_filepath`, so `sub/folder/filename.md` will apply to `even/further/sub/folder/filename.md`.*
+
 
 
 
