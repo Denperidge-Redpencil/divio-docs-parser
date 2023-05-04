@@ -11,7 +11,7 @@ from .Args import args
 def _docs_from_configured_repos():
     """Generate docs from configured repos"""
     for repoconfig in args.repos:
-        docs_from_repo(repoconfig["url"])
+         _get_repo_docs(repoconfig, write_to_disk=args.write_to_disk)
     
     generate_nav_as_needed()
 

@@ -3,6 +3,8 @@ from configparser import ConfigParser
 from os import getcwd, path
 from argparse import ArgumentParser
 
+from .Repo import Repo
+
 """Code to handle configuration, through docs.conf or args"""
 
 section_keys = ["tutorials", "howtos", "explanations", "references"]
@@ -170,11 +172,15 @@ for i, section_name in enumerate(["tutorials", "howtos", "explanations", "refere
 
 if get_cli_arg_value("repos"):
     for repo_arg in get_cli_arg_value("repos"):
-        repo = dict()
-        repo["url"] = repo_arg[0]
+        repo = Repo(repo_arg[0])
         for arg in repo_arg[1:]:
             key, value = arg.split("=", 1)
-            repo[key] = value
+            key = key.lower()
+            if "ignore" in key:
+                repo.files_to_ignore.append(value)
+            elif "copy" in key:
+                repo.files_to_copy.append(value) 
+
         args.repos.append(repo)
         conf[repo["url"]] = repo
     
@@ -184,7 +190,15 @@ if use_conf:
         if conf_section_id in conf_sections.values(): continue
 
         conf_section = conf[conf_section_id]
-        repo = dict(conf_section)
+        repo_data = dict(conf_section)
+        repo = Repo(repo_data["url"])
+        
+        if "ignore" in repo_data:
+            repo.files_to_ignore.append(repo_data["ignore"])
+        if "copy" in repo_data:
+            repo.files_to_copy.append(repo_data["copy"])
+            
+
         if repo not in args.repos:
             args.repos.append(repo)
         

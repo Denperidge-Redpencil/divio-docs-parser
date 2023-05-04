@@ -17,14 +17,6 @@ def clear_docs():
     if exists(args.docs_basedir):
         rmtree(args.docs_basedir)
 
-def filepath_in_exceptions(exceptioned_files: list, filepath: str):
-    """Check if an alternative action has to be taken for a file"""
-    try:
-        return next(filter(lambda exceptioned_file: exceptioned_file.rsplit("/", 1)[0] in filepath, exceptioned_files))
-    except StopIteration:
-        return False  # the file is not part of the exception could not be found, return False
-
-
 def _make_and_get_repodir(repo_name):
     """Create a directory for the repository in the docs basedir"""
     return _join_paths_mkdir(args.docs_basedir, repo_name)

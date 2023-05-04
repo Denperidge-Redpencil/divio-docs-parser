@@ -2,6 +2,7 @@
 from glob import glob
 from os import makedirs
 from os.path import join, exists
+from typing import List
 # Local imports
 from git.repo import Repo as GitRepo
 from slugify import slugify
@@ -12,11 +13,12 @@ repos_dir = "repos/"
 makedirs(repos_dir, exist_ok=True)
 
 class Repo():
-    def __init__(self, url: str) -> None:
-        """Constructs a Repo class instance, applies configuration (TODO) and clones/pulls the repo"""
-        #self.files_to_copy = []
-        #self.files_to_ignore = []
+    def __init__(self, url: str, files_to_copy: List[str] = [], files_to_ignore: List[str] = []) -> None:
+        """Constructs a Repo class instance, applies configuration and clones/pulls the repo"""
         self.url = url
+
+        self.files_to_copy = files_to_copy
+        self.files_to_ignore = files_to_ignore
 
         if not self.exists_locally:
             self.gitpython = GitRepo.clone_from(url, self.local_dir)
@@ -70,5 +72,19 @@ class Repo():
             raise FileNotFoundError
 
         return data
+    
+    def check_ignore_file(self, filepath: str):
+        return self._file_in_exceptions(self.files_to_ignore, filepath)
+    
+    def check_copy_file(self, filepath: str):
+        return self._file_in_exceptions(self.files_to_copy, filepath)
+
+    def _file_in_exceptions(self, exceptioned_files: list, filepath: str):
+        """Check if an alternative action has to be taken for a file"""
+        try:
+            return next(filter(lambda exceptioned_file: exceptioned_file.rsplit("/", 1)[0] in filepath, exceptioned_files))
+        except StopIteration:
+            return False  # the file is not part of the exception could not be found, return False
+
     
 

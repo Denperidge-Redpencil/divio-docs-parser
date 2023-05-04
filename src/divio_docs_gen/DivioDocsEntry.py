@@ -19,6 +19,23 @@ class DivioDocsEntry():
             self.repo_sections[section_id] = dict()
     
     def add_to_repo_section(self, section_id: str, filename="README.md", content: str=""):
+        ignore = self.repo.check_ignore_file(filename)
+        if ignore:
+            print("Ignoring " + filename) 
+            return
+        
+        print(filename)
+        copy = self.repo.check_copy_file(filename)
+        if copy:
+            print(copy)
+            copy_filename, copy_dest = copy.rsplit("/", 1)
+            print("copy")
+            print()
+            #copy_filename = Path(copy_filename).name # The selector can be a path, but only the filename should be kept for handling
+            # Copy=documentation.md/references
+            section_id = copy_dest
+
+
         try:
             self.repo_sections[section_id][filename] += content
         except KeyError:
