@@ -3,8 +3,6 @@ from configparser import ConfigParser
 from os import getcwd, path
 from argparse import ArgumentParser
 
-from .Repo import Repo
-
 """Code to handle configuration, through docs.conf or args"""
 
 section_keys = ["tutorials", "howtos", "explanations", "references"]
@@ -172,17 +170,18 @@ for i, section_name in enumerate(["tutorials", "howtos", "explanations", "refere
 
 if get_cli_arg_value("repos"):
     for repo_arg in get_cli_arg_value("repos"):
-        repo = Repo(repo_arg[0])
+        repo_config = dict()
+        repo_config.url = repo_arg[0]
         for arg in repo_arg[1:]:
             key, value = arg.split("=", 1)
             key = key.lower()
             if "ignore" in key:
-                repo.files_to_ignore += value.split("//")
+                repo_config["files_to_ignore"] = value.split("//")
             elif "move" in key:
-                repo.files_to_move += value.split("//") 
+                repo_config["files_to_move"] = value.split("//") 
 
-        args.repos.append(repo)
-        conf[repo["url"]] = repo
+        args.repos.append(repo_config)
+        conf[repo_config["url"]] = repo_config
     
 if use_conf:
     all_conf_sections = conf.sections()
@@ -190,16 +189,17 @@ if use_conf:
         if conf_section_id in conf_sections.values(): continue
 
         conf_section = conf[conf_section_id]
-        repo_data = dict(conf_section)
-        repo = Repo(repo_data["url"])
+        raw_data = dict(conf_section)
+        repo_config = dict()
+        repo_config["url"] = raw_data["url"]
         
-        if "ignore" in repo_data:
-            repo.files_to_ignore += repo_data["ignore"].split("//")
-        if "move" in repo_data:
-            repo.files_to_move += repo_data["move"].split("//")
+        if "ignore" in raw_data:
+            repo_config["files_to_ignore"] = raw_data["ignore"].split("//")
+        if "move" in raw_data:
+            repo_config["files_to_move"] = raw_data["move"].split("//")
 
-        if repo not in args.repos:
-            args.repos.append(repo)
+        if repo_config not in args.repos:
+            args.repos.append(repo_config)
         
 
 if args.save_conf:
