@@ -4,9 +4,9 @@ Automatically collect, aggregate and structure all your [divio-style documentati
 ```
 /{reponame}
     /tutorials
-    /howtos
-    /explanations
-    /references
+    /how_to_guides
+    /explanation
+    /reference
 ```
 
 On a basic level, this repo will only need a list of git url's!
@@ -16,7 +16,7 @@ On a basic level, this repo will only need a list of git url's!
     - Or, if you have an how-to.md file, it'll get added in its entirety!
 - Any output structure: this script generates a simple markdown tree. Nothing proprietary, no vendor-lockin. It can be generated from GitHub Actions and put into a Jekyll pages site just as easily as it is run from a Raspberry Pi and used to render the contents of an Ember application.
 
-All you have to do is simply name your headers and/or files after the divio sections (`tutorial`, `how-to`, `explanation`, `reference`). (Oh, don't worry, the search is done through a case insensitive regex. Add more words as you please) 
+All you have to do is simply name your headers and/or files after the divio sections (`tutorials`, `how_to_guides`, `explanation`, `reference`). (Oh, don't worry, the search is done through a case insensitive regex. Add more words as you please) 
 
 ## Getting-Started / tutorial
 - Install the package (`python3 -m pip install divio_docs_gen`)
@@ -59,9 +59,9 @@ Further expansion could be done to this project. For example, a structure like t
 /{reponame}
     /0.0.1
         /tutorials
-        /how-tos
-        /explanations
-        /references
+        /how_to_guides
+        /explanation
+        /reference
 ```
 ... should not be impossible to achieve with some tweaking!
 
@@ -77,9 +77,9 @@ This section is on the top of the file, and defines options that affect the enti
 | GenerateNav   | (boolean) Whether to add internal navigation to the top of each generated file. Defaults to `False` |
 | DocsBasedir   | What folder to output the docs in. Defaults to `docs/` |
 | Tutorials     | Sets the output folder name for tutorials. Defaults to `tutorials`    |
-| Howtos        | Sets the output folder name for how-tos. Defaults to `how-tos`    |
-| explanations  | Sets the output folder name for explanations. Defaults to `explanations`    |
-| references    | Sets the output folder name for references. Defaults to `references`    |
+| how_to_guides | Sets the output folder name for how-to guides. Defaults to `how_to_guides`    |
+| explanation   | Sets the output folder name for explanation. Defaults to `explanation`    |
+| reference     | Sets the output folder name for reference. Defaults to `reference`    |
 
 
 #### [repo] section
@@ -93,7 +93,7 @@ You can add as many of these as you want. Each one represents a repo you want pa
 
 
 **Example Ignore:** `Ignore=building-a-template.md//why-semantic-microservices.md`
-**Example Move:** `Move=documentation.md/references`
+**Example Move:** `Move=documentation.md/reference`
 
 
 *Note: for `Move` and `Ignore` you can choose to be more specific by writing `sub/folder/filename.md`. The check is a `provided_path in full_filepath`, so `sub/folder/filename.md` will apply to `even/further/sub/folder/filename.md`.*
@@ -107,7 +107,7 @@ For ease of use and freedom of implementation, every section has synonyms.
 | Section       | Synonyms                        |
 | ------------- | ------------------------------- |
 | Tutorials     | Getting started                 |
-| How-To's      | How-To, Guide, Usage            |
+| How-to Guides | How-To, Guide, Usage            |
 | Explanation   | Discussion, background material | 
 | Reference     | Technical                       |
 

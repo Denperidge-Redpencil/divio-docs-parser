@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 
 """Code to handle configuration, through docs.conf or args"""
 
-section_keys = ["tutorials", "howtos", "explanations", "references"]
+section_keys = ["tutorials", "how_to_guides", "explanation", "reference"]
 class Args:
     def __init__(self) -> None:
         # store_true default is False, which means save_conf's output will be too verbose. Use None instead
@@ -14,7 +14,7 @@ class Args:
         self.docs_basedir = "docs/"
         self.generate_nav = None
 
-        self.tutorials, self.howtos, self.explanations, self.references = section_keys
+        self.tutorials, self.how_to_guides, self.explanation, self.reference = section_keys
 
         self.repos = []
     
@@ -23,11 +23,11 @@ class Args:
         if section_id == section_keys[0]:
             return self.tutorials
         elif section_id == section_keys[1]:
-            return self.howtos
+            return self.how_to_guides
         elif section_id == section_keys[2]:
-            return self.explanations
+            return self.explanation
         elif section_id == section_keys[3]:
-            return self.references
+            return self.reference
         print(section_id)
 
 
@@ -42,9 +42,9 @@ class Args:
         - generate_nav: {self.generate_nav}
 
         - tutorials: {self.tutorials}
-        - howtos: {self.howtos}
-        - explanations: {self.explanations}
-        - references: {self.references}
+        - how_to_guides: {self.how_to_guides}
+        - explanation: {self.explanation}
+        - reference: {self.reference}
 
         - repos: {self.repos} 
         """
@@ -130,7 +130,7 @@ if use_conf or args.save_conf:
 
 """ Get config, save if desired, apply"""
 def get_conf_value(section_id, value_id):
-    return conf[section_id][value_id] if value_id in conf[section_id] else ""
+    return conf[section_id][value_id] if value_id in conf[section_id] else None
 
 def get_cli_arg_value(value_id):
     return getattr(cli_args, value_id) if hasattr(cli_args, value_id) else None
@@ -142,7 +142,7 @@ def get_value(section_id, value_id, default):
     # If it's undefined in the CLI, check if conf can be used
     if value is None and use_conf:
         value = get_conf_value(section_id, value_id)
-    elif value is None:
+    if value is None:
         value = default
 
     if args.save_conf:
@@ -155,17 +155,17 @@ args.write_to_disk = bool(get_value(conf_sections["output"], "WriteToDisk", Fals
 args.generate_nav = bool(get_value(conf_sections["output"], "GenerateNav", False))
 args.docs_basedir = get_value(conf_sections["output"], "DocsBasedir", "docs/")
 
-for i, section_name in enumerate(["tutorials", "howtos", "explanations", "references"]):
+for i, section_name in enumerate(["tutorials", "how_to_guides", "explanation", "reference"]):
     # TODO cleaner solution
     value = get_value(conf_sections["naming"], value_id=section_name, default=section_name)
     if i == 0:
         args.tutorials = value
     elif i == 1:
-        args.howtos = value
+        args.how_to_guides = value
     elif i == 2:
-        args.explanations = value
+        args.explanation = value
     elif i == 3:
-        args.references = value
+        args.reference = value
 
 
 if get_cli_arg_value("repos"):

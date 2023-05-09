@@ -1,7 +1,7 @@
 from re import search, RegexFlag, sub, escape
 from .Args import args
 
-"""Defines section (how-to, getting started...) classes"""
+"""Defines section (how_to_guides, tutorials...) classes"""
 
 def regex(needle: r"str", haystack: str, flags):
     """Base regex helper"""
@@ -118,9 +118,9 @@ class Section:
 """Section definitions. This is where you can customise synonyms"""
 sections = {
     "tutorials": Section(args.tutorials,       r"(tutorial|getting\W*started)"),
-    "howtos": Section(args.howtos,             r"(how\W*to|guide|usage)"),
-    "explanations": Section(args.explanations, r"(explanation|discussion|background\W*material)"),
-    "references": Section(args.references,     r"(reference|technical)")
+    "how_to_guides": Section(args.how_to_guides,             r"(how\W*to|guide|usage)"),
+    "explanation": Section(args.explanation, r"(explanation|discussion|background\W*material)"),
+    "reference": Section(args.reference,     r"(reference|technical)")
 }
 
 

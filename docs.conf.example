@@ -5,9 +5,9 @@ docsbasedir = docs/
 
 [Naming Scheme]
 tutorials = Tutorials
-howtos = How-To
-explanations = Explanations
-references = Reference
+how_to_guides = How-Tos
+explanation = explanation
+reference = Reference
 
 [Repository Selection]
 
@@ -16,5 +16,5 @@ url = https://github.com/mu-semtech/mu-cl-resources
 
 [https://github.com/denperidge-redpencil/project]
 url = https://github.com/denperidge-redpencil/project
-Move=documentation.md/references
+Move=documentation.md/reference
 Ignore=building-a-template.md//why-semantic-microservices.md
