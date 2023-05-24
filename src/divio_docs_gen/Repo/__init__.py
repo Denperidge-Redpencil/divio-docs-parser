@@ -60,7 +60,8 @@ class Repo():
 
     """PARSE & OUTPUT"""
     def _import_sections_from_markdown(self, input_path_or_string: str, output_filename="README.md"):
-        parsed_file = split_sections_from_markdown(input_path_or_string)
+        parsed_file = split_sections_from_markdown(input_path_or_string).to_dict()
+        
         for section_id in parsed_file:
             self.add_to_section(section_id, output_filename, parsed_file[section_id])
 

@@ -35,7 +35,7 @@ python3 -m pip install divio_docs_gen
 git clone https://github.com/Denperidge-Redpencil/divio-docs-gen.git
 cd divio-docs-gen
 python3 -m pip install -r requirements.txt
-python3 src.divio_docs_gen
+python3 -m src.divio_docs_gen
 ```
 
 ### Build & install package locally
