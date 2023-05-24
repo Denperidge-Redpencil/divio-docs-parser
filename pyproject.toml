@@ -1,6 +1,6 @@
 [project]
 name = "divio_docs_gen"
-version = "0.2.3"
+version = "0.2.4"
 authors = [
     { name="Denperidge", email="denperidge@gmail.com" },
 ]
@@ -9,8 +9,8 @@ readme = "README.md"
 requires-python = ">=3.6"
 dependencies = [
     "GitPython",
-    "python-slugify; python_version<'3.6'",
-    "unicode-slugify; python_version>'3.7'"
+    "python-slugify; python_version>'3.6'",
+    "unicode-slugify; python_version<'3.7'"
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
