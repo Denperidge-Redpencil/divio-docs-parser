@@ -1,12 +1,12 @@
 [project]
 name = "divio_docs_gen"
-version = "0.2.6"
+version = "0.2.7"
 authors = [
     { name="Denperidge", email="denperidge@gmail.com" },
 ]
 description = "Turn all the markdown files in your repos into one big, divio structrured documentation"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.6"
 dependencies = [
     "GitPython",
     "python-slugify",
