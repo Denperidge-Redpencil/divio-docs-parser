@@ -1,3 +1,2 @@
 GitPython==3.1.31
-python-slugify==8.0.1; python_version > "3.6"
-unicode_slugify==0.1.5; python_version < "3.7"
+python-slugify  # Don't specify version for increased support: https://github.com/un33k/python-slugify#official-support-matrix
