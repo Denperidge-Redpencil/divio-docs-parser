@@ -1,6 +1,6 @@
 import unittest
 
-from divio_docs_parser.markdown_parser import parse_all_sections_from_markdown, _parse_all_sections_from_markdown_file, _parse_all_sections_from_markdown_string
+from divio_docs_parser.md_to_sections import parse_all_sections_from_markdown, _parse_all_sections_from_markdown_file, _parse_all_sections_from_markdown_string
 
 
 expected_output = {
@@ -9,17 +9,23 @@ expected_output = {
 This is the tutorial text!
 
 ## And a subtitle
-With more text!""",
+With more text!
 
-    "how_to_guides":"""# Howtoguides
-How to...
 """,
 
-    "discussions": """# Discussions
-...discuss...""",
+    "how_to_guides":"""# How to
+How to...
+
+""",
+
+    "explanation": """# Discussions
+...discuss...
+
+""",
 
     "reference": """# Reference
-... data and stuff"""
+... data and stuff
+"""
 }
 
 
@@ -28,7 +34,7 @@ test_data = "tests/test_data/README.md"
 class TestDivioDocs(unittest.TestCase):
     
     def test_parse_all_sections_from_markdown_file(self):
-        return
+        
         data = parse_all_sections_from_markdown(test_data)
         print()
         print(data)

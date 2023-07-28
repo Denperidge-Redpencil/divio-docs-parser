@@ -23,13 +23,17 @@ def _parse_all_sections_from_markdown_string(input_string: str, filename="") -> 
 
     for section_id in sections:
         section = sections[section_id]
+        print(section_id)
         
-        section_in_content = section.header_in(input_string, search_using_markdown_header=True)
-        section_in_filename =  section.header_in(filename)
+        section_in_content = section.header_in(input_string)
+        section_in_filename =  section.header_in(filename, must_have_header_tags=False)
 
         found = section_in_content or section_in_filename
 
         if found:
+            print(f"{section_id} found!")
+            print(section.parse_from(input_string))
+            print("----\n\n\n")
             extracted_sections[section_id] = section.parse_from(input_string)
     
     return extracted_sections
