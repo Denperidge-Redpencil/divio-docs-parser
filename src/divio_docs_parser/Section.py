@@ -1,4 +1,5 @@
 from re import RegexFlag, sub, escape
+from typing import Union, Match
 from .Args import args
 from .utils.regex import search_ignorecase_multiline, search_ignorecase_multiline_dotallnewline
 
@@ -13,52 +14,59 @@ class Section:
     @property
     def regex_with_md_header(self):
         """Returns the regex to find this section, accounting for Markdown headers"""
-        return r"^\s*#.*" + self.regex
+        return r"#.*" + self.regex
     
 
-    def find_in(self, haystack: str, search_using_markdown_header = False) -> str:
+    def find_header(self, haystack: str) -> Union[Match[str], None]:
         """Returns the contents of this section from a string"""
-        needle = self.regex if not search_using_markdown_header else self.regex_with_md_header
-        return search_ignorecase_multiline(needle, haystack)
+        return search_ignorecase_multiline(self.regex_with_md_header, haystack)
     
-    def found_in(self, haystack: str, search_using_markdown_header = False) -> bool:
+    def found_header(self, haystack: str) -> bool:
         """Returns True if this section can be found in a string"""
-        return bool(self.find_in(haystack, search_using_markdown_header))
+        return bool(self.find_header(haystack))
     
-
 
      
-    def _get_section_header_from_string(self, input_string: str):
+    def _get_header_string(self, input_string: str):
         """Return the unparsed contents of this sections' header"""
-        return self.find_in(input_string, search_using_markdown_header=True).group()
+        try:
+            return self.find_header(input_string).group()
+        except AttributeError:
+            return None
 
-    def get_header_tags_from_string(self, input_string: str):
+    def _get_header_tags_from_string(self, input_string: str):
         """
-        Get the markdown header tags from this header
+        Get the markdown header tags from this header, with whitespace
 
-        Example output: ###
+        Example with tutorials:
+        Input:
+        ## Docs
+        ...
+        ### Tutorials
+        ...
+
+        Output: `### `
         """
-        # 
 
         try:
-            return search_ignorecase_multiline(r"\s*#*\W", self._get_section_header_from_string(input_string)).group()
+            return search_ignorecase_multiline(r"#*\W", self._get_header_string(input_string)).group()
         except AttributeError:
             return None
     
-    def _get_content_from_string(self, input_string: str):
+    def _get_section_content_from_string(self, input_string: str):
         """Find and return everything between the section header and the header of the next section"""
         # Okay, extracting the content will be a bit complex
         # The regex will contain 3 parts/groups
         # Group 1: the header of the section 
-        regex = r"(^" + escape(self._get_section_header_from_string(input_string)) + ")" # Start of line, header, end of line
+        regex = r"(^" + escape(self._get_header_string(input_string)) + ")" # Start of line, header, end of line
         regex += "(.*)" # All content in between the section header and...
-        regex += escape(self.get_header_tags_from_string(input_string)) + "(\s|\w)"  # The next header of the same size
+        regex += escape(self._get_header_tags_from_string(input_string)) + "(\s|\w)"  # The next header of the same size
         try:
             return search_ignorecase_multiline_dotallnewline(regex, input_string).groups()[1]  # Use the S flag
         except AttributeError:
             # If the regex fails, its possible there is no following header
             # TODO cleaner solution
-            regex = r"(^" + escape(self._get_section_header_from_string(input_string)) + ")" # Start of line, header, end of line
+            regex = r"(^" + escape(self._get_header_string(input_string)) + ")" # Start of line, header, end of line
             regex += "(.*)" # All content in between the section header and...
             return search_ignorecase_multiline_dotallnewline(regex, input_string).groups()[1]  # Use the S flag
     
@@ -75,10 +83,10 @@ class Section:
 
         #print(self.sourceContent)
         #print(self.section.name)
-        originalBaseHeaderlevel = self.get_header_tags_from_string(input_string).count('#')  # Example output: 3
+        originalBaseHeaderlevel = self._get_header_tags_from_string(input_string).count('#')  # Example output: 3
         lowerEveryHeaderlevelBy = originalBaseHeaderlevel - 1  # Example output: 2
 
-        output = self._get_section_header_from_string(input_string) + self._get_content_from_string(input_string)  # Add the original header
+        output = self._get_header_string(input_string) + self._get_section_content_from_string(input_string)  # Add the original header
 
 
         header_regex = r"^#*"
