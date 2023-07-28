@@ -54,8 +54,8 @@ class Section:
         # Group 1: the header of the section 
         #print(self._header_from(input_string))
         regex = r"(^" + escape(self._header_from(input_string)) + ")" # Start of line, header, end of line
-        regex += "(.*)" # All content in between the section header and...
-        regex += escape(self._header_tags_from(input_string)) + "(\s|\w)"  # The next header of the same size
+        regex += "(.*?)" # All content in between the section header and...
+        regex += "(?=^" + escape(self._header_tags_from(input_string).strip()) + "[^#])"  # The next header of the same size
         try:
             return search_ignorecase_multiline_dotallnewline(regex, input_string).groups()[1]  # Use the S flag
         except AttributeError:
@@ -109,7 +109,4 @@ sections = {
     "explanation": Section(args.explanation, r"(explanation|discussion|background\W*material)"),
     "reference": Section(args.reference,     r"(reference|technical)")
 }
-
-
-
 
