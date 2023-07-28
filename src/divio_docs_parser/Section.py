@@ -29,7 +29,7 @@ class Section:
     @property
     def regex_with_md_header(self):
         """Returns the regex to find this section, accounting for Markdown headers"""
-        return r"^#.*" + self.regex
+        return r"^\s*#.*" + self.regex
     
 
     def find_in(self, haystack: str, search_using_markdown_header = False) -> str:
@@ -57,7 +57,7 @@ class Section:
         # 
 
         try:
-            return regexIM(r"#*\W", self._get_section_header_from_string(input_string)).group()
+            return regexIM(r"\s*#*\W", self._get_section_header_from_string(input_string)).group()
         except AttributeError:
             return None
     

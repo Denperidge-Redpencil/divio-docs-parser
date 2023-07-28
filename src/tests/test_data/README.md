@@ -5,7 +5,7 @@ This is the tutorial text!
 ### And a subtitle
 With more text!
 
-## Howtoguides
+## How-to guide
 How To...
 
 ## Discussions
