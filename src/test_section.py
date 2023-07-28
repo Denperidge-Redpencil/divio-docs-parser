@@ -31,7 +31,7 @@ class TestDivioDocs(unittest.TestCase):
         self.assertEqual(len(results_with_md_regex), 1)
     
     
-    def test_find_in():
+    def test_find_in(self):
         pass
 
 

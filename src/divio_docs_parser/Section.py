@@ -1,24 +1,8 @@
-from re import search, RegexFlag, sub, escape
+from re import RegexFlag, sub, escape
 from .Args import args
+from .utils.regex import search_ignorecase_multiline, search_ignorecase_multiline_dotallnewline
 
 """Defines section (how_to_guides, tutorials...) classes"""
-
-def regex(needle: r"str", haystack: str, flags):
-    """Base regex helper"""
-    return search(needle, haystack, flags)
-
-def regexIM(needle: r"str", haystack: str):
-    """Helper for case insensitive & multiline regex"""
-    return regex(needle, haystack, RegexFlag.IGNORECASE | RegexFlag.MULTILINE)
-    
-# Includes https://docs.python.org/3/library/re.html#re.S
-def regexIMS(needle: r"str", haystack: str):
-    """
-    Helper for dotall (. matches newline), case insensitive & multiline regex
-    
-    For RegexFlag.S, see https://docs.python.org/3/library/re.html#re.S
-    """
-    return regex(needle, haystack, RegexFlag.IGNORECASE | RegexFlag.MULTILINE | RegexFlag.S)
 
 class Section:
     """Class to represent a Section"""
@@ -35,7 +19,7 @@ class Section:
     def find_in(self, haystack: str, search_using_markdown_header = False) -> str:
         """Returns the contents of this section from a string"""
         needle = self.regex if not search_using_markdown_header else self.regex_with_md_header
-        return regexIM(needle, haystack)
+        return search_ignorecase_multiline(needle, haystack)
     
     def found_in(self, haystack: str, search_using_markdown_header = False) -> bool:
         """Returns True if this section can be found in a string"""
@@ -57,7 +41,7 @@ class Section:
         # 
 
         try:
-            return regexIM(r"\s*#*\W", self._get_section_header_from_string(input_string)).group()
+            return search_ignorecase_multiline(r"\s*#*\W", self._get_section_header_from_string(input_string)).group()
         except AttributeError:
             return None
     
@@ -70,13 +54,13 @@ class Section:
         regex += "(.*)" # All content in between the section header and...
         regex += escape(self.get_header_tags_from_string(input_string)) + "(\s|\w)"  # The next header of the same size
         try:
-            return regexIMS(regex, input_string).groups()[1]  # Use the S flag
+            return search_ignorecase_multiline_dotallnewline(regex, input_string).groups()[1]  # Use the S flag
         except AttributeError:
             # If the regex fails, its possible there is no following header
             # TODO cleaner solution
             regex = r"(^" + escape(self._get_section_header_from_string(input_string)) + ")" # Start of line, header, end of line
             regex += "(.*)" # All content in between the section header and...
-            return regexIMS(regex, input_string).groups()[1]  # Use the S flag
+            return search_ignorecase_multiline_dotallnewline(regex, input_string).groups()[1]  # Use the S flag
     
     def extract_and_parse_section_from_string(self, input_string: str) -> str:
         """Extracts and parses the section content from a string, returning a new string with corrected header tags"""
