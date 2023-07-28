@@ -1,6 +1,6 @@
 [project]
-name = "divio_docs_gen"
-version = "0.3.0"
+name = "divio_docs_parser"
+version = "0.0.1"
 authors = [
     { name="Denperidge", email="denperidge@gmail.com" },
 ]
@@ -22,11 +22,8 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/Denperidge-Redpencil/divio-docs-gen"
-"Bug Tracker" = "https://github.com/Denperidge-Redpencil/divio-docs-gen/issues"
-
-[project.scripts]
-divio_docs_gen = "divio_docs_gen:main"
+"Homepage" = "https://github.com/Denperidge-Redpencil/divio-docs-parser"
+"Bug Tracker" = "https://github.com/Denperidge-Redpencil/divio-docs-parser/issues"
 
 [build-system]
 requires = ["setuptools>=61.0"]

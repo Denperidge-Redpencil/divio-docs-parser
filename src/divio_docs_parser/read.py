@@ -1,33 +1,9 @@
-# Native imports
+# Built-in imports
 from os import makedirs
 from os.path import join, exists
 from glob import glob
-# Package imports
-from git.repo import Repo as GitRepo
 
-"""Repo utitilities for local file management"""
-
-repos_dir = "repos/"
-makedirs(repos_dir, exist_ok=True)
-
-def clone_or_pull_repo(self) -> GitRepo:
-    if not self.exists_locally:
-        self.gitpython = GitRepo.clone_from(self.url, self.local_dir)
-    else:
-        self.gitpython = GitRepo(self.local_dir)
-        self.gitpython.remotes[0].pull()
-        
-
-def _exists_locally(self) -> bool:
-    """(Property)"""
-    return exists(self.local_dir)
-exists_locally = property(_exists_locally)
-
-def _local_dir(self) -> str:
-    """(Method) Returns path to local files for the repo"""
-    # Follows GitHub zip file naming
-    return f"{repos_dir}/{self.slug}"
-local_dir = property(_local_dir)
+"""Utilities for reading files"""
 
 def get_file(self, path) -> str:
     """(Method) Returns the path to a file, automatically prefixing the repos dir path if needed"""

@@ -1,6 +1,6 @@
 # Divio Docs Generator
 
-Automatically collect, aggregate and structure all your [divio-style documentation](https://documentation.divio.com/) into a tree of .md files.
+Parse all your [divio-style documentation](https://documentation.divio.com/) into consistent Python objects, or write them to your disk
 ```
 /{reponame}
     /tutorials
@@ -11,7 +11,7 @@ Automatically collect, aggregate and structure all your [divio-style documentati
 
 On a basic level, this repo will only need a list of git url's!
 
-- Any input structure: this script will scan your entire repository for .md files
+- Any input structure: this script will scan your entire repository for .md files. For example:
     - If you have a how-to section in your README, that'll get extracted and put in the right spot
     - Or, if you have an how-to.md file, it'll get added in its entirety!
 - Any output structure: this script generates a simple markdown tree. Nothing proprietary, no vendor-lockin. It can be generated from GitHub Actions and put into a Jekyll pages site just as easily as it is run from a Raspberry Pi and used to render the contents of an Ember application.
@@ -19,15 +19,15 @@ On a basic level, this repo will only need a list of git url's!
 All you have to do is simply name your headers and/or files after the divio sections (`tutorials`, `how_to_guides`, `explanation`, `reference`). (Oh, don't worry, the search is done through a case insensitive regex. Add more words as you please) 
 
 ## Getting-Started / tutorial
-- Install the package (`python3 -m pip install divio_docs_gen`)
+- Install the package (`python3 -m pip install divio_docs_parser`)
 - And then either...
     - Setup the docs.conf file (See the [reference below](#docsconf) and/or the [docs.conf.example](docs.conf.example) file)
-    - Use throught the cli (`python3 -m divio_docs_gen --help`)
+    - Use throught the cli (`python3 -m divio_docs_parser --help`)
 
 ## How-To
 ### Install from pip
 ```bash
-python3 -m pip install divio_docs_gen
+python3 -m pip install divio_docs_parser
 ```
 
 ### Clone & run scripts locally
@@ -35,7 +35,7 @@ python3 -m pip install divio_docs_gen
 git clone https://github.com/Denperidge-Redpencil/divio-docs-gen.git
 cd divio-docs-gen
 python3 -m pip install -r requirements.txt
-python3 -m src.divio_docs_gen
+python3 -m src.divio_docs_parser
 ```
 
 ### Build & install package locally
