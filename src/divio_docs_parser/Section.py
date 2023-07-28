@@ -17,16 +17,17 @@ class Section:
         return r"^#.*" + self.regex
     
 
-    def _header_from(self, haystack: str) -> Union[str, None]:
+    def _header_from(self, haystack: str, must_have_header_tags=True) -> Union[str, None]:
         """Returns the contents of this section from a string"""
+        needle = self.regex_with_md_header if must_have_header_tags else self.regex
         try:
-            return search_ignorecase_multiline(self.regex_with_md_header, haystack).group()
+            return search_ignorecase_multiline(needle, haystack).group()
         except AttributeError:
             return None
     
-    def header_in(self, haystack: str) -> bool:
+    def header_in(self, haystack: str, must_have_header_tags=True) -> bool:
         """Returns True if this section can be found in a string"""
-        return bool(self._header_from(haystack))
+        return bool(self._header_from(haystack, must_have_header_tags))
     
 
     def _header_tags_from(self, input_string: str):

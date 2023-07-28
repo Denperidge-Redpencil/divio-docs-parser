@@ -56,10 +56,17 @@ class TestDivioDocs(unittest.TestCase):
     def test_header_from(self):
         self.assertEqual(self.section._header_from(test_string_with_tutorials), "## Tutorials")
         self.assertIsNone(self.section._header_from(test_string_without_tutorials))
+
+        self.assertIsNone(self.section._header_from("path/to/tutorials.md", must_have_header_tags=True))
+        self.assertIsNotNone(self.section._header_from("path/to/tutorials.md", must_have_header_tags=False))
     
     def test_header_in(self):
         self.assertTrue(self.section.header_in(test_string_with_tutorials))
         self.assertFalse(self.section.header_in(test_string_without_tutorials))
+
+        self.assertFalse(self.section.header_in("path/to/tutorials.md", must_have_header_tags=True))
+        self.assertTrue(self.section.header_in("path/to/tutorials.md", must_have_header_tags=False))
+
 
     def test_get_header_tags_from(self):
         self.assertEqual(self.section._header_tags_from(test_string_with_tutorials), "## ")
