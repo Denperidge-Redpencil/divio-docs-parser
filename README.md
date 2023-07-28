@@ -38,6 +38,14 @@ python3 -m pip install -r requirements.txt
 python3 -m src.divio_docs_parser
 ```
 
+### Run tests
+```bash
+# From project root
+cd src/
+python3 -m unittest
+```
+
+
 ### Build & install package locally
 ```bash
 git clone https://github.com/Denperidge-Redpencil/divio-docs-gen.git
