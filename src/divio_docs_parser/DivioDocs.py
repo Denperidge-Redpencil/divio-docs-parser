@@ -27,7 +27,8 @@ class DivioDocs():
         self._explanation = Section("explanation", regex_explanation)
         self._reference = Section("reference", regex_reference)
         
-
+        if input_string_or_path:
+            self.import_docs(input_string_or_path)
         
         
 
@@ -87,17 +88,11 @@ class DivioDocs():
     def _sectionObjects(self):
         return [self._tutorials, self._how_to_guides, self._explanation, self._reference]
     
-    def import_string(self, input_string: str, filename=None):
-        content = parse_sections_from_markdown(self._sectionObjects, input_string)
+    def import_docs(self, filename_or_string: str, section_name=None):
+        content = parse_sections_from_markdown(self._sectionObjects, filename_or_string, section_name)
 
         for section_id in content:
             self.append(section_id, "README.md", content[section_id])
         
+        return self
         
-
-    def import_files():
-        pass
-    
-    def from_directory():
-        pass
-

@@ -2,6 +2,17 @@ import unittest
 
 from divio_docs_parser.DivioDocs import DivioDocs
 
+readme_path = "tests/test_data/README.md"
+
+readme_tutorials = """# Tutorials
+This is the tutorial text!
+
+## And a subtitle
+With more text!
+
+"""
+
+
 class TestDivioDocs(unittest.TestCase):
     
     def test_empty_init(self):
@@ -12,7 +23,11 @@ class TestDivioDocs(unittest.TestCase):
         self.assertDictEqual(docs.explanation, {})
         self.assertDictEqual(docs.reference, {})
 
-    #def test_init_with_input(self):
+    def test_init_with_input(self):
+        docs = DivioDocs(readme_path)
+
+        self.assertEqual(docs.tutorials["README.md"], readme_tutorials)
+        
 
 
     def test_get(self):
@@ -55,11 +70,10 @@ class TestDivioDocs(unittest.TestCase):
         self.assertListEqual(joined, ["123", "456"])
     
 
-    def test_import(self):
-        return
-        docs = DivioDocs().import_string_or_file("tests/test_data/README.md")
+    def test_import_docs(self):
+        docs = DivioDocs().import_docs(readme_path)
 
-        print(docs)
+        self.assertEqual(docs.tutorials["README.md"], readme_tutorials)
 
 
 if __name__ == "__main__":
