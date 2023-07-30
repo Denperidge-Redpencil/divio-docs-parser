@@ -1,6 +1,6 @@
 # Built-in imports
 from typing import Dict
-from .md_to_sections import parse_all_sections_from_markdown
+from .md_to_sections import parse_sections_from_markdown
 from .Section import Section
 
 
@@ -83,8 +83,12 @@ class DivioDocs():
             (self.reference,        self._reference),
         ]
     
-    def import_string_or_file(self, input_string_or_path: str):
-        content = parse_all_sections_from_markdown(input_string_or_path)
+    @property
+    def _sectionObjects(self):
+        return [self._tutorials, self._how_to_guides, self._explanation, self._reference]
+    
+    def import_string(self, input_string: str, filename=None):
+        content = parse_sections_from_markdown(self._sectionObjects, input_string)
 
         for section_id in content:
             self.append(section_id, "README.md", content[section_id])
