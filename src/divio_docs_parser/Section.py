@@ -100,13 +100,4 @@ class Section:
         return output
 
         
-    
-
-"""Section definitions. This is where you can customise synonyms"""
-sections = {
-    "tutorials": Section(args.tutorials,       r"(tutorial|getting\W*started)"),
-    "how_to_guides": Section(args.how_to_guides,             r"(how\W*to|guide|usage)"),
-    "explanation": Section(args.explanation, r"(explanation|discussion|background\W*material)"),
-    "reference": Section(args.reference,     r"(reference|technical)")
-}
 
