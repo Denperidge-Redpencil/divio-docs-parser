@@ -1,12 +1,35 @@
 # Built-in imports
 from typing import Dict
+from .md_to_sections import parse_all_sections_from_markdown
+from .Section import Section
+
+
 
 class DivioDocs():
-    def __init__(self, tutorials:Dict=dict(), how_to_guides:Dict=dict(), explanation:Dict=dict(), reference:Dict=dict()) -> None:
-        self.tutorials = tutorials
-        self.how_to_guides = how_to_guides
-        self.explanation = explanation
-        self.reference = reference
+    def __init__(self,
+                 input_string_or_path: str=None,
+                 regex_tutorials =      r"(tutorial|getting\W*started)",
+                 regex_how_to_guides =  r"(how\W*to|guide|usage)", 
+                 regex_explanation =    r"(explanation|discussion|background\W*material)",
+                 regex_reference =      r"(reference|technical)"
+            ) -> None:
+        """
+        input
+        """
+        
+        self.tutorials:     Dict[str, str] = dict()
+        self.how_to_guides: Dict[str, str] = dict()
+        self.explanation:   Dict[str, str] = dict()
+        self.reference:     Dict[str, str] = dict()
+
+        self._tutorials = Section("tutorials", regex_tutorials)
+        self._how_to_guides = Section("how_to_guides", regex_how_to_guides)
+        self._explanation = Section("explanation", regex_explanation)
+        self._reference = Section("reference", regex_reference)
+        
+
+        
+        
 
     def set(self, section_name: str, file_name: str, content: str):
         section: Dict = getattr(self, section_name)
@@ -32,14 +55,16 @@ class DivioDocs():
     
     
     def joined(self, section_name: str) -> list:
-        return list(self.get(section_name).values())
+        return list(getattr(self, section_name).values())
     
-    def get(self, section_name, file_name: str=None) -> Dict:
+    def get(self, section_name, file_name: str) -> str:
         section = getattr(self, section_name)
-        if not file_name:
-            return section
-        else:
+
+        try:
             return section[file_name]
+        except KeyError:
+            section[file_name] = ""
+            return self.get(section_name, file_name)
     
     def to_dict(self) -> Dict[str, str]:
         return {
@@ -48,3 +73,27 @@ class DivioDocs():
             "explanation": self.explanation,
             "reference": self.reference
         }
+    
+    @property
+    def _sections(self):
+        return [
+            (self.tutorials,        self._tutorials),
+            (self.how_to_guides,    self._how_to_guides),
+            (self.explanation,      self._explanation),
+            (self.reference,        self._reference),
+        ]
+    
+    def import_string_or_file(self, input_string_or_path: str):
+        content = parse_all_sections_from_markdown(input_string_or_path)
+
+        for section_id in content:
+            self.append(section_id, "README.md", content[section_id])
+        
+        
+
+    def import_files():
+        pass
+    
+    def from_directory():
+        pass
+
