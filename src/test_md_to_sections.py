@@ -29,20 +29,32 @@ How to...
 }
 
 
-test_data = "tests/test_data/README.md"
+test_data_path = "tests/test_data/README.md"
 
 class TestDivioDocs(unittest.TestCase):
     
     def test_parse_all_sections_from_markdown_file(self):
-        
-        data = parse_all_sections_from_markdown(test_data)
-        print()
-        print(data)
-        print(expected_output)
-
+        data = _parse_all_sections_from_markdown_file(test_data_path)
         self.assertDictEqual(data, expected_output)
         
        
+    def test_parse_all_sections_from_markdown_string(self):
+        with open(test_data_path, "r", encoding="utf-8") as file:
+            input = file.read()
+
+        data = _parse_all_sections_from_markdown_string(input)
+        self.assertDictEqual(data, expected_output)
+
+    
+    def test_parse_all_sections_from_either(self):
+        with open(test_data_path, "r", encoding="utf-8") as file:
+            test_data_string = file.read()
+
+        inputs = [test_data_path, test_data_string]
+        for input in inputs:
+            data = parse_all_sections_from_markdown(input)
+            self.assertDictEqual(data, expected_output)
+
 
 
 if __name__ == "__main__":
