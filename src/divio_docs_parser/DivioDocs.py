@@ -7,6 +7,8 @@ from .constants import *
 
 
 class DivioDocs():
+    """The class used to collect & parse divio style documentation from a directory/project/repo"""
+
     def __init__(self,
                  input_string_or_path: str=None,
                  regex_tutorials =      r"(tutorial|getting\W*started)",
@@ -15,13 +17,19 @@ class DivioDocs():
                  regex_reference =      r"(reference|technical)"
             ) -> None:
         """
-        input
+        `input_string_or_path`: (Optional) Filename or string to collect & parse. More can be collected later
+        
+        `regex_{SECTION}`: (Optional) The regex that will be used to parse the SECTION's contents
         """
         
         self.tutorials:     Dict[str, str] = dict()
+        """Dictionary containing the collected `tutorials` in a { `filename`: `content` } structure"""
         self.how_to_guides: Dict[str, str] = dict()
+        """Dictionary containing the collected `how-to guides` in a { `filename`: `content` } structure"""
         self.explanation:   Dict[str, str] = dict()
+        """Dictionary containing the collected `explanation` in a { `filename`: `content` } structure"""
         self.reference:     Dict[str, str] = dict()
+        """Dictionary containing the collected `reference` in a { `filename`: `content` } structure"""
 
         self._tutorials = Section(ID_TUTORIALS, regex_tutorials)
         self._how_to_guides = Section(ID_HOW_TO_GUIDES, regex_how_to_guides)
@@ -31,9 +39,9 @@ class DivioDocs():
         if input_string_or_path:
             self.import_docs(input_string_or_path)
         
-        
 
-    def set(self, section_name: str, file_name: str, content: str):
+    def _set(self, section_name: str, file_name: str, content: str):
+        """Set self.SECTION_NAME.FILENAME to CONTENT"""
         section: Dict = getattr(self, section_name)
         try:
             section[file_name] = content
@@ -41,34 +49,40 @@ class DivioDocs():
             print("error")
     
     def _pre_or_append(self, section_name: str, file_name, added_content: str, append=True):
-        old_content = self.get(section_name, file_name)
+        """Wraps the set function, but without replacing the contents: instead prepending or appending"""
+        old_content = self._get(section_name, file_name)
         if append:
             new_content = old_content + added_content
         else:
             new_content = added_content + old_content
 
-        self.set(section_name, file_name, new_content)
+        self._set(section_name, file_name, new_content)
     
-    def prepend(self, section_name: str, file_name: str, added_content: str):
+    def _prepend(self, section_name: str, file_name: str, added_content: str):
+        """Prepends content to the specified filename in the section"""
         self._pre_or_append(section_name, file_name, added_content, append=False)
     
-    def append(self, section_name: str, file_name: str, added_content: str):
+    def _append(self, section_name: str, file_name: str, added_content: str):
+        """Appends content to the specified filename in the section"""
         self._pre_or_append(section_name, file_name, added_content, append=True)
     
     
-    def joined(self, section_name: str) -> list:
+    def section_without_filenames(self, section_name: str) -> list:
+        """Returns the section as a list, with the filenames omitted"""
         return list(getattr(self, section_name).values())
     
-    def get(self, section_name, file_name: str) -> str:
+    def _get(self, section_name, file_name: str) -> str:
+        """Gets the sections file, creating an empty value for it if none can be found"""
         section = getattr(self, section_name)
 
         try:
             return section[file_name]
         except KeyError:
             section[file_name] = ""
-            return self.get(section_name, file_name)
+            return self._get(section_name, file_name)
     
     def to_dict(self) -> Dict[str, Dict[str, str]]:
+        """Returns all the collected docs in a { `section_name`: { `filename`: `content` } } format"""
         return {
             ID_TUTORIALS: self.tutorials,
             ID_HOW_TO_GUIDES: self.how_to_guides,
@@ -78,6 +92,10 @@ class DivioDocs():
     
     @property
     def _sections(self):
+        """
+        Returns a list in the following format: ({SECTION_DICT}, {SECTION_CLASS_OBJECT})
+        in the order of tutorials, how-to guides, explanation and reference
+        """
         return [
             (self.tutorials,        self._tutorials),
             (self.how_to_guides,    self._how_to_guides),
@@ -87,13 +105,18 @@ class DivioDocs():
     
     @property
     def _sectionObjects(self):
+        """Returns every Section object in a list: [`_tutorials`, `_how_to_guides`, `_explanation`, `_reference`]"""
         return [self._tutorials, self._how_to_guides, self._explanation, self._reference]
     
-    def import_docs(self, filename_or_string: str, section_name=None):
-        content = parse_sections_from_markdown(self._sectionObjects, filename_or_string, section_name)
+    def import_docs(self, filename_or_string: str, section_id: str=None):
+        """
+        Collects & parses all documentation within either the file at the path provided, or the string provided
+        
+        Optionally set `section_id` to override the automatic section detection and add the contents to the specified section 
+        """
+        content = parse_sections_from_markdown(self._sectionObjects, filename_or_string, section_id)
 
         for section_id in content:
-            self.append(section_id, "README.md", content[section_id])
+            self._append(section_id, "README.md", content[section_id])
         
         return self
-        

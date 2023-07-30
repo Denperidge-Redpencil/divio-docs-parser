@@ -1,5 +1,8 @@
-
 ID_TUTORIALS = "tutorials"
+"""ID used internally to refer to the tutorial section"""
 ID_HOW_TO_GUIDES = "how_to_guides"
+"""ID used internally to refer to the how-to guides section"""
 ID_EXPLANATION = "explanation"
+"""ID used internally to refer to the explanation section"""
 ID_REFERENCE = "reference"
+"""ID used internally to refer to the reference section"""

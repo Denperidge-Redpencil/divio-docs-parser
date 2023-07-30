@@ -34,40 +34,40 @@ class TestDivioDocs(unittest.TestCase):
     def test_get(self):
         docs = DivioDocs()
         docs.tutorials = {"README.md": "Data"}
-        self.assertEqual(docs.get(ID_TUTORIALS, "README.md"), "Data")
+        self.assertEqual(docs._get(ID_TUTORIALS, "README.md"), "Data")
 
     def test_set_undefined_key(self):
         docs = DivioDocs()
-        docs.set(ID_TUTORIALS, "README.md", "New data")
+        docs._set(ID_TUTORIALS, "README.md", "New data")
         
         self.assertEqual(docs.tutorials["README.md"], "New data")
 
     def test_set_existing_key(self):
         docs = DivioDocs()
         docs.tutorials = {"README.md": "old data"}
-        docs.set(ID_TUTORIALS, "README.md", "New data")
+        docs._set(ID_TUTORIALS, "README.md", "New data")
         
-        self.assertEqual(docs.get(ID_TUTORIALS, "README.md"), "New data")
+        self.assertEqual(docs._get(ID_TUTORIALS, "README.md"), "New data")
 
     def test_append(self):
         docs = DivioDocs()
         docs.tutorials = {"README.md": "123"}
-        docs.append(ID_TUTORIALS, "README.md", "456")
+        docs._append(ID_TUTORIALS, "README.md", "456")
 
-        self.assertEqual(docs.get(ID_TUTORIALS, "README.md"), "123456")
+        self.assertEqual(docs._get(ID_TUTORIALS, "README.md"), "123456")
 
     def test_prepend(self):
         docs = DivioDocs()
         docs.tutorials = {"README.md": "456"}
-        docs.prepend(ID_TUTORIALS, "README.md", "123")
+        docs._prepend(ID_TUTORIALS, "README.md", "123")
 
-        self.assertEqual(docs.get(ID_TUTORIALS, "README.md"), "123456")
+        self.assertEqual(docs._get(ID_TUTORIALS, "README.md"), "123456")
 
     def test_joined(self):
         docs = DivioDocs()
         docs.tutorials = {"README.md": "123", "Tutorials.md": "456"}
 
-        joined = docs.joined(ID_TUTORIALS)
+        joined = docs.section_without_filenames(ID_TUTORIALS)
         self.assertListEqual(joined, ["123", "456"])
     
 
