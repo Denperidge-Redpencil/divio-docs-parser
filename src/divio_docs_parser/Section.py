@@ -1,6 +1,5 @@
 from re import RegexFlag, sub, escape
 from typing import Union, Match
-from .Args import args
 from .utils.regex import search_ignorecase_multiline, search_ignorecase_multiline_dotallnewline
 
 """Defines section (how_to_guides, tutorials...) classes"""
