@@ -2,10 +2,11 @@ import unittest
 
 from divio_docs_parser.md_to_sections import parse_sections_from_markdown, _parse_sections_from_markdown_file, _parse_sections_from_markdown_string
 from divio_docs_parser.DivioDocs import DivioDocs
+from divio_docs_parser.constants import *
 
 
 expected_output = {
-    "tutorials": 
+    ID_TUTORIALS: 
         """# Tutorials
 This is the tutorial text!
 
@@ -14,17 +15,17 @@ With more text!
 
 """,
 
-    "how_to_guides":"""# How to
+    ID_HOW_TO_GUIDES:"""# How to
 How to...
 
 """,
 
-    "explanation": """# Discussions
+    ID_EXPLANATION: """# Discussions
 ...discuss...
 
 """,
 
-    "reference": """# Reference
+    ID_REFERENCE: """# Reference
 ... data and stuff
 """
 }

@@ -1,9 +1,10 @@
 import unittest
 
 from divio_docs_parser.Section import Section
+from divio_docs_parser.constants import ID_TUTORIALS
 from re import findall, RegexFlag
 
-test_section_name = "tutorials"
+test_section_name = ID_TUTORIALS
 test_section_regex = r"tutorials"
 test_string_with_tutorials = """
 ## How-to

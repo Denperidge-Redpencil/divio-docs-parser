@@ -2,6 +2,7 @@
 from typing import Dict
 from .md_to_sections import parse_sections_from_markdown
 from .Section import Section
+from .constants import *
 
 
 
@@ -22,10 +23,10 @@ class DivioDocs():
         self.explanation:   Dict[str, str] = dict()
         self.reference:     Dict[str, str] = dict()
 
-        self._tutorials = Section("tutorials", regex_tutorials)
-        self._how_to_guides = Section("how_to_guides", regex_how_to_guides)
-        self._explanation = Section("explanation", regex_explanation)
-        self._reference = Section("reference", regex_reference)
+        self._tutorials = Section(ID_TUTORIALS, regex_tutorials)
+        self._how_to_guides = Section(ID_HOW_TO_GUIDES, regex_how_to_guides)
+        self._explanation = Section(ID_EXPLANATION, regex_explanation)
+        self._reference = Section(ID_REFERENCE, regex_reference)
         
         if input_string_or_path:
             self.import_docs(input_string_or_path)
@@ -67,12 +68,12 @@ class DivioDocs():
             section[file_name] = ""
             return self.get(section_name, file_name)
     
-    def to_dict(self) -> Dict[str, str]:
+    def to_dict(self) -> Dict[str, Dict[str, str]]:
         return {
-            "tutorials": self.tutorials,
-            "how_to_guides": self.how_to_guides,
-            "explanation": self.explanation,
-            "reference": self.reference
+            ID_TUTORIALS: self.tutorials,
+            ID_HOW_TO_GUIDES: self.how_to_guides,
+            ID_EXPLANATION: self.explanation,
+            ID_REFERENCE: self.reference
         }
     
     @property
