@@ -1,6 +1,6 @@
 # Built-in imports
 from typing import Dict
-from .md_to_sections import parse_sections_from_markdown
+from .utils.markdown_parser import parse_sections_from_markdown
 from .Section import Section
 from .constants import *
 
