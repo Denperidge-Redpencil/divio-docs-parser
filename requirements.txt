@@ -1,2 +1,0 @@
-GitPython==3.1.31
-python-slugify  # Don't specify version for increased support: https://github.com/un33k/python-slugify#official-support-matrix
