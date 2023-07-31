@@ -34,7 +34,7 @@ def _parse_sections_from_markdown_string(sections: List[Section], input_string: 
         found = section_in_content or section_in_filename
 
         if found:
-            extracted_sections[section.name] = section.parse_from(input_string)
+            extracted_sections[section.id] = section.parse_from(input_string)
     
     return extracted_sections
 

@@ -1,14 +1,25 @@
+# Built-in imports
 from re import RegexFlag, sub, escape
 from typing import Union, Match
+
+# Local imports
 from .utils.regex import search_ignorecase_multiline, search_ignorecase_multiline_dotallnewline
 
-"""Defines section (how_to_guides, tutorials...) classes"""
 
 class Section:
-    """Class to represent a Section"""
-    def __init__(self, name: str, regex:r"str") -> None:
-        self.name = name
+    """
+    Defines a section from the Divio documentation structure
+    (e.g. tutorials, how-to guides, reference and explanation)
+
+    This class contains everything needed to find and parse section
+    content out of a markdown string
+    """
+    def __init__(self, id: str, regex:r"str") -> None:
+        self.id = id
+        """Used mostly by markdown_parser to structure output (e.g. {`section_id`: `content`})"""
         self.regex = regex
+        """The regex to match (the title of) the section"""
+
     
     @property
     def regex_with_md_header(self):
@@ -17,7 +28,7 @@ class Section:
     
 
     def _header_from(self, haystack: str, must_have_header_tags=True) -> Union[str, None]:
-        """Returns the contents of this section from a string"""
+        """Uses regex_with_md_header to find and return the header in the file, if possible"""
         needle = self.regex_with_md_header if must_have_header_tags else self.regex
         try:
             return search_ignorecase_multiline(needle, haystack).group()
@@ -25,22 +36,25 @@ class Section:
             return None
     
     def header_in(self, haystack: str, must_have_header_tags=True) -> bool:
-        """Returns True if this section can be found in a string"""
+        """Returns True if the section header is present in the string"""
         return bool(self._header_from(haystack, must_have_header_tags))
     
 
     def _header_tags_from(self, input_string: str):
         """
-        Get the markdown header tags from this header, with whitespace
+        Get the markdown header tags from this header
+        (with whitespace included) 
 
         Example with tutorials:
-        Input:
-        ## Docs
-        ...
-        ### Tutorials
-        ...
 
-        Output: `### `
+        Input:
+        ```
+            ## Docs
+            ...
+            ### Tutorials
+            ...
+        ```
+        Output: `"### "`
         """
         result = search_ignorecase_multiline(r"#*\W", self._header_from(input_string))
 
@@ -50,11 +64,13 @@ class Section:
         """Find and return everything between the section header and the header of the next section"""
         # Okay, extracting the content will be a bit complex
         # The regex will contain 3 parts/groups
+
         # Group 1: the header of the section 
-        #print(self._header_from(input_string))
         regex = r"(^" + escape(self._header_from(input_string)) + ")" # Start of line, header, end of line
-        regex += "(.*?)" # All content in between the section header and...
-        regex += "(?=^" + escape(self._header_tags_from(input_string).strip()) + "[^#])"  # The next header of the same size
+        # Group 2: All content in between the section header and...
+        regex += "(.*?)"
+        # Group 3: The next header of the same size
+        regex += "(?=^" + escape(self._header_tags_from(input_string).strip()) + "[^#])"
         try:
             return search_ignorecase_multiline_dotallnewline(regex, input_string).groups()[1]  # Use the S flag
         except AttributeError:
@@ -65,7 +81,10 @@ class Section:
             return search_ignorecase_multiline_dotallnewline(regex, input_string).groups()[1]  # Use the S flag
     
     def parse_from(self, input_string: str) -> str:
-        """Extracts and parses the section header & content from a string, returning a new string with corrected header tags"""
+        """
+        Extracts and parses the section header & content from a string,
+        returning a new string with corrected header tags
+        """
         # Now we have the unparsed section content,
         # but the headers are all still based on the old file. And our header isn't there!
 
@@ -75,10 +94,9 @@ class Section:
         # ##### Subthing
         # #### Second one
 
-        #print(self.sourceContent)
-        #print(self.section.name)
-        originalBaseHeaderlevel = self._header_tags_from(input_string).count('#')  # Example output: 3
-        lowerEveryHeaderlevelBy = originalBaseHeaderlevel - 1  # Example output: 2
+
+        original_base_header_count = self._header_tags_from(input_string).count('#')  # Example output: 3
+        lower_header_count_by = original_base_header_count - 1  # Example output: 2
 
         output = self._header_from(input_string) + self._content_from(input_string)  # Add the original header
 
@@ -89,7 +107,7 @@ class Section:
             string = match.group()  # Example: ###
             originalHeaderlevel = string.count("#")  # Example: 3
             if originalHeaderlevel > 0:
-                newHeaderLevel = originalHeaderlevel - lowerEveryHeaderlevelBy  # Example: 2
+                newHeaderLevel = originalHeaderlevel - lower_header_count_by  # Example: 2
                 string = sub(header_regex, "#"*newHeaderLevel, string)  # Example: #
             return string
             
@@ -97,6 +115,4 @@ class Section:
         output = sub(header_regex, lower_header, output, flags=RegexFlag.IGNORECASE|RegexFlag.MULTILINE)        
 
         return output
-
-        
 

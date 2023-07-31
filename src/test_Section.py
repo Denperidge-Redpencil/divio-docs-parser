@@ -39,7 +39,7 @@ class TestDivioDocs(unittest.TestCase):
         
     
     def test_init(self):
-        self.assertEqual(self.section.name, test_section_name)
+        self.assertEqual(self.section.id, test_section_name)
         self.assertEqual(self.section.regex, test_section_regex)
 
     def test_regex_with_md_header(self):
