@@ -1,6 +1,10 @@
 # Built-in imports
+from os.path import isdir
 from typing import Dict
+
+# Local imports
 from .utils.markdown_parser import parse_sections_from_markdown
+from .utils.files import list_all_markdown_files
 from .Section import Section
 from .constants import *
 
@@ -108,15 +112,26 @@ class DivioDocs():
         """Returns every Section object in a list: [`_tutorials`, `_how_to_guides`, `_explanation`, `_reference`]"""
         return [self._tutorials, self._how_to_guides, self._explanation, self._reference]
     
-    def import_docs(self, filename_or_string: str, section_id: str=None):
+    def _import_doc(self, path_or_string, filename: str=None):
+        content = parse_sections_from_markdown(self._sectionObjects, path_or_string, filename)
+
+        for section_id in content:
+            self._append(section_id, "README.md", content[section_id])
+        
+        return self
+    
+    def import_docs(self, path_or_string: str):
         """
         Collects & parses all documentation within either the file at the path provided, or the string provided
         
         Optionally set `section_id` to override the automatic section detection and add the contents to the specified section 
         """
-        content = parse_sections_from_markdown(self._sectionObjects, filename_or_string, section_id)
 
-        for section_id in content:
-            self._append(section_id, "README.md", content[section_id])
-        
+        if not isdir(path_or_string):
+            self._import_doc(path_or_string)
+        else:
+            all_md_files = list_all_markdown_files(path_or_string)
+            for md_file in all_md_files:
+                self._import_doc(md_file)
+
         return self

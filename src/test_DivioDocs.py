@@ -71,10 +71,17 @@ class TestDivioDocs(unittest.TestCase):
         self.assertListEqual(joined, ["123", "456"])
     
 
-    def test_import_docs(self):
+    def test_import_docs_single(self):
         docs = DivioDocs().import_docs(readme_path)
 
         self.assertEqual(docs.tutorials["README.md"], readme_tutorials)
+    
+    def test_import_docs_multiple(self):
+        docs = DivioDocs().import_docs("tests/test_data/")
+
+        self.assertEqual(docs.tutorials["README.md"], readme_tutorials + """# Tutorials
+## Extra content
+For a different test""")
 
 
 if __name__ == "__main__":
