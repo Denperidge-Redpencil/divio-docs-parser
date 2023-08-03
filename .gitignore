@@ -1,11 +1,9 @@
+# Python cache
 __pycache__
-docs.conf
-docs/
-tmp/
-repos/
 
-# Package build
+# Auto-generated test data
+src/tests/data/
+
+# Package building
 dist/
 *.egg-info/
-
-src/tests/data/
