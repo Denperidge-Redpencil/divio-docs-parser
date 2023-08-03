@@ -1,7 +1,7 @@
 import unittest
 
-from divio_docs_parser.Section import Section
-from divio_docs_parser.constants import ID_TUTORIALS
+from ..divio_docs_parser.Section import Section
+from ..divio_docs_parser.constants import ID_TUTORIALS
 from re import findall, RegexFlag
 
 test_section_name = ID_TUTORIALS
@@ -30,7 +30,7 @@ test_string_without_tutorials = """
 """
 
 
-class TestDivioDocs(unittest.TestCase):
+class TestSection(unittest.TestCase):
     def setUp(self) -> None:
         self.section = Section(test_section_name, test_section_regex)
     

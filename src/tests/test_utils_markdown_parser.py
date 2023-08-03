@@ -1,8 +1,8 @@
 import unittest
 
-from divio_docs_parser.utils.markdown_parser import parse_sections_from_markdown, _parse_sections_from_markdown_file, _parse_sections_from_markdown_string
-from divio_docs_parser.DivioDocs import DivioDocs
-from divio_docs_parser.constants import *
+from ..divio_docs_parser.utils.markdown_parser import parse_sections_from_markdown, _parse_sections_from_markdown_file, _parse_sections_from_markdown_string
+from ..divio_docs_parser.DivioDocs import DivioDocs
+from ..divio_docs_parser.constants import *
 
 
 expected_output = {
@@ -31,9 +31,9 @@ How to...
 }
 
 
-test_data_path = "tests/test_data/README.md"
+test_data_path = "src/tests/test_data/README.md"
 
-class TestDivioDocs(unittest.TestCase):
+class TestUtilsMarkdownParser(unittest.TestCase):
     def setUp(self) -> None:
         self.sections = DivioDocs()._sectionObjects
     

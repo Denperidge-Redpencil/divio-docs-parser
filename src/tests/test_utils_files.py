@@ -2,13 +2,13 @@ import unittest
 from os import makedirs
 from shutil import rmtree
 
-from divio_docs_parser.utils.files import list_all_files, list_all_markdown_files
+from ..divio_docs_parser.utils.files import list_all_files, list_all_markdown_files
 
 def touch(filename):
     with open(filename, "a"):
         pass
 
-class TestUtilsRegex(unittest.TestCase):
+class TestUtilsFiles(unittest.TestCase):
     def setUp(self) -> None:
         self.dirname = "random_dir/"
         furthest_subdir = self.dirname + "files/here/"

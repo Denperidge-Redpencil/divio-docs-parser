@@ -1,6 +1,6 @@
 import unittest
 
-from divio_docs_parser.utils.regex import regex_search, search_ignorecase_multiline, search_ignorecase_multiline_dotallnewline
+from ..divio_docs_parser.utils.regex import regex_search, search_ignorecase_multiline, search_ignorecase_multiline_dotallnewline
 
 
 class TestUtilsRegex(unittest.TestCase):

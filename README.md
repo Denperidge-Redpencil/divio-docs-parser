@@ -12,14 +12,15 @@ python3 -m pip install divio_docs_parser
 
 ### Clone & run scripts locally
 ```bash
-python3 -m pip install -r requirements.txt
+git clone https://github.com/Denperidge-Redpencil/divio-docs-parser.git
+cd divio-docs-gen/
 python3 -m src.divio_docs_parser
 ```
 
 ### Run tests
 ```bash
 git clone https://github.com/Denperidge-Redpencil/divio-docs-parser.git
-cd divio-docs-gen/src/
+cd divio-docs-gen/
 python3 -m unittest
 ```
 
