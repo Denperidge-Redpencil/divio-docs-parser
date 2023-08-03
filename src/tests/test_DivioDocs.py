@@ -1,17 +1,9 @@
 import unittest
 
+from .helpers import test_data_readme_path as readme_path, TEST_README_PARSED, test_data_dir
+
 from ..divio_docs_parser.DivioDocs import DivioDocs
 from ..divio_docs_parser.constants import ID_TUTORIALS
-
-readme_path = "src/tests/test_data/README.md"
-
-readme_tutorials = """# Tutorials
-This is the tutorial text!
-
-## And a subtitle
-With more text!
-
-"""
 
 
 class TestDivioDocs(unittest.TestCase):
@@ -27,7 +19,7 @@ class TestDivioDocs(unittest.TestCase):
     def test_init_with_input(self):
         docs = DivioDocs(readme_path)
 
-        self.assertEqual(docs.tutorials["README.md"], readme_tutorials)
+        self.assertEqual(docs.tutorials["README.md"], TEST_README_PARSED["tutorials"])
         
 
 
@@ -74,12 +66,12 @@ class TestDivioDocs(unittest.TestCase):
     def test_import_docs_single(self):
         docs = DivioDocs().import_docs(readme_path)
 
-        self.assertEqual(docs.tutorials["README.md"], readme_tutorials)
+        self.assertEqual(docs.tutorials["README.md"], TEST_README_PARSED["tutorials"])
     
     def test_import_docs_multiple(self):
-        docs = DivioDocs().import_docs(readme_path.replace("README.md", ""))
+        docs = DivioDocs().import_docs(test_data_dir)
 
-        self.assertEqual(docs.tutorials["README.md"], readme_tutorials + """# Tutorials
+        self.assertEqual(docs.tutorials["README.md"], TEST_README_PARSED["tutorials"] + """# Tutorials
 ## Extra content
 For a different test""")
 

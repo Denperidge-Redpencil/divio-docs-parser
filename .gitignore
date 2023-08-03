@@ -7,3 +7,5 @@ repos/
 # Package build
 dist/
 *.egg-info/
+
+src/tests/data/

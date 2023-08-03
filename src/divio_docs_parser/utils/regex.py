@@ -2,7 +2,11 @@ from re import search as _search, RegexFlag, sub, escape
 
 def regex_search(needle: r"str", haystack: str, flags=0):
     """Base regex search helper"""
-    return _search(needle, haystack, flags)
+    try:
+        return _search(str(needle), str(haystack), flags)
+    except TypeError as error:
+        raise error
+
 
 def search_ignorecase_multiline(needle: r"str", haystack: str):
     """Helper for case insensitive & multiline regex"""
