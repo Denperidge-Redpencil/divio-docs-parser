@@ -23,5 +23,5 @@ classifiers = [
 "Bug Tracker" = "https://github.com/Denperidge-Redpencil/divio-docs-parser/issues"
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"

@@ -28,7 +28,7 @@ python3 -m unittest
 ```bash
 git clone https://github.com/Denperidge-Redpencil/divio-docs-parser.git
 cd divio-docs-gen/
-python3 -m pip install --upgrade build setuptools
+python3 -m pip install --upgrade build setuptools  # If no setuptools dist can be found, try using a higher python version
 python3 -m build && python3 -m pip install --force-reinstall ./dist/*.whl
 ```
 *Note: other Python versions can be used!*
