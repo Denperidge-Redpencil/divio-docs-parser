@@ -61,7 +61,7 @@ How to...
 }
 
 TEST_DATA_TUTORIALS_CONTENT = \
-"""# Tutorials
+"""# Extra file
 ## Extra content
 For a different test"""
 

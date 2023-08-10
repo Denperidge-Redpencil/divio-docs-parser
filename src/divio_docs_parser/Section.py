@@ -80,11 +80,14 @@ class Section:
             regex += "(.*)" # All content in between the section header and...
             return search_ignorecase_multiline_dotallnewline(regex, input_string).groups()[1]  # Use the S flag
     
-    def parse_from(self, input_string: str) -> str:
+    def parse_from(self, input_string: str, import_whole_file=False) -> str:
         """
         Extracts and parses the section header & content from a string,
         returning a new string with corrected header tags
         """
+        if import_whole_file:
+            return input_string
+
         # Now we have the unparsed section content,
         # but the headers are all still based on the old file. And our header isn't there!
 
@@ -99,7 +102,6 @@ class Section:
         lower_header_count_by = original_base_header_count - 1  # Example output: 2
 
         output = self._header_from(input_string) + self._content_from(input_string)  # Add the original header
-
 
         header_regex = r"^#*"
         
