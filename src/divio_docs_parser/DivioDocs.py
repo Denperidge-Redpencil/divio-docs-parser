@@ -112,11 +112,11 @@ class DivioDocs():
         """Returns every Section object in a list: [`_tutorials`, `_how_to_guides`, `_explanation`, `_reference`]"""
         return [self._tutorials, self._how_to_guides, self._explanation, self._reference]
     
-    def _import_doc(self, path_or_string, filename: str=None):
+    def _import_doc(self, path_or_string, filename: str="README.md"):
         content = parse_sections_from_markdown(self._sectionObjects, path_or_string, filename)
 
         for section_id in content:
-            self._append(section_id, "README.md", content[section_id])
+            self._append(section_id, filename, content[section_id])
         
         return self
     
@@ -132,6 +132,7 @@ class DivioDocs():
         else:
             all_md_files = list_all_markdown_files(path_or_string)
             for md_file in all_md_files:
-                self._import_doc(md_file)
+                filename = md_file.replace(str(path_or_string) + "/", "")
+                self._import_doc(md_file, filename)
 
         return self
