@@ -1,5 +1,5 @@
 # Built-in imports
-from os.path import isdir, dirname, basename
+from os.path import isdir, dirname, basename, isfile
 from typing import Dict
 from pathlib import Path
 
@@ -121,7 +121,7 @@ class DivioDocs():
         
         return self
     
-    def import_docs(self, path_or_string: str):
+    def import_docs(self, path_or_string: str, filename:str=None):
         """
         Collects & parses all documentation within either the file at the path provided, or the string provided
         
@@ -129,9 +129,15 @@ class DivioDocs():
         """
 
         # TODO make basename vs path behaviour more clear?
-        if not isdir(path_or_string):
-            
-            
+        if not isdir(path_or_string) and not isfile(path_or_string):
+
+            # String passed without specified filename
+            if not filename:
+                filename = "README.md"
+            self._import_doc(path_or_string, filename)
+
+        
+        elif isfile(path_or_string):
             filename = Path(path_or_string)
             basedir = filename
             basedir_found = False
@@ -143,9 +149,9 @@ class DivioDocs():
                     if "readme" in file or file == ".git":
                         basedir_found = True
 
-
             self._import_doc(path_or_string, str(filename.relative_to(basedir)))
-        else:
+
+        elif isdir(path_or_string):
             all_md_files = list_all_markdown_files(path_or_string)
             for md_file in all_md_files:
                 # path_or_string might or might not include a trailing /, so don't use that in replace
