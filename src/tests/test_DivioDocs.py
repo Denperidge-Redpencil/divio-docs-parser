@@ -67,6 +67,13 @@ class TestDivioDocs(unittest.TestCase):
         docs = DivioDocs().import_docs(readme_path)
 
         self.assertEqual(docs.tutorials["README.md"], TEST_README_PARSED["tutorials"])
+
+        self.assertIsNone(docs.tutorials.get("extra/Tutorials.md")) 
+        docs.import_docs(test_data_tutorials_path)
+        self.assertEqual(docs.tutorials["extra/Tutorials.md"], """# Extra file
+## Extra content
+For a different test""")
+
     
     def test_import_docs_multiple(self):
         docs = DivioDocs().import_docs(test_data_dir)

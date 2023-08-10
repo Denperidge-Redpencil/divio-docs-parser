@@ -1,6 +1,7 @@
 # Built-in imports
-from os.path import isdir
+from os.path import isdir, dirname, basename
 from typing import Dict
+from pathlib import Path
 
 # Local imports
 from .utils.markdown_parser import parse_sections_from_markdown
@@ -127,12 +128,28 @@ class DivioDocs():
         Optionally set `section_id` to override the automatic section detection and add the contents to the specified section 
         """
 
+        # TODO make basename vs path behaviour more clear?
         if not isdir(path_or_string):
-            self._import_doc(path_or_string)
+            
+            
+            filename = Path(path_or_string)
+            basedir = filename
+            basedir_found = False
+            while not basedir_found:
+                basedir = basedir.parent
+                files = [file.name.lower() for file in basedir.glob("*")]
+                for file in files:
+                    print(file)
+                    if "readme" in file or file == ".git":
+                        basedir_found = True
+
+
+            self._import_doc(path_or_string, str(filename.relative_to(basedir)))
         else:
             all_md_files = list_all_markdown_files(path_or_string)
             for md_file in all_md_files:
-                filename = md_file.replace(str(path_or_string) + "/", "")
+                # path_or_string might or might not include a trailing /, so don't use that in replace
+                filename = md_file.replace(str(path_or_string), "").lstrip("/")
                 self._import_doc(md_file, filename)
 
         return self
