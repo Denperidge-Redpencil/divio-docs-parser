@@ -24,42 +24,51 @@ def _parse_sections_from_markdown_file(sections: List[Section], path: str, embed
 
     return _parse_sections_from_markdown_string(sections, data, path, embed_relative_files)
 
+def _import_relative_files(input_string, filename):
+    # If filename is defined
+    if filename is not None:
+        path = dirname(filename)
+    # Otherwise, use working directory
+    else:
+        path = dirname(getcwd())
+
+    relative_files = grab_relative_hrefs(input_string)
+    for relative_file in relative_files:
+        file_path = realpath(join(path, relative_file["href"]))
+
+        if not exists(file_path):
+            continue
+
+        ext = splitext(file_path)[1].lower().replace(".", "", 1)
+
+        if ext == "":
+            pass
+        elif ext == "svg" or ext == "md":
+            with open(file_path, "r", encoding="UTF-8") as file:
+                file_contents = file.read()
+            
+            if ext == "svg":
+                file_contents = file_contents.replace("<svg", '<svg role="img"', 1)
+                file_contents = file_contents.replace(">", f'<title>{relative_file["title"]}</title>', 1)
+            else:
+                file_contents = f'<details><summary>{relative_file["title"]}</summary>\n\n{file_contents}\n\n</details>'
+        else:
+            # Thanks to https://www.techcoil.com/blog/how-to-use-python-3-to-convert-your-images-to-base64-encoding/
+            with open(file_path, "rb") as img:
+                base64 = b64encode(img.read()).decode("utf-8")
+            file_contents = f'<img alt="{relative_file["title"]}" src="{base64}" />'
+
+        input_string = input_string.replace(relative_file["tag"], file_contents)
+
+    return input_string
+
 def _parse_sections_from_markdown_string(sections: List[Section], input_string: str, filename=None, embed_relative_files=False) -> Dict[str, str]:
     """Parses a markdown string, returning a dict { `section_id`: `section_content` }"""
     extracted_sections = dict()
 
     # Relative file import
     if embed_relative_files:
-        # If filename is defined
-        if filename is not None:
-            path = dirname(filename)
-        # Otherwise, use working directory
-        else:
-            path = dirname(getcwd())
-
-        relative_files = grab_relative_hrefs(input_string)
-        for relative_file in relative_files:
-            file_path = realpath(join(path, relative_file["href"]))
-
-
-            ext = splitext(file_path)[1].lower().replace(".", "", 1)
-
-            if ext == "svg" or ext == "md":
-                with open(file_path, "r", encoding="UTF-8") as file:
-                    file_contents = file.read()
-                
-                if ext == "svg":
-                    file_contents = file_contents.replace("<svg", '<svg role="img"', 1)
-                    file_contents = file_contents.replace(">", f'<title>{relative_file["title"]}</title>', 1)
-                else:
-                    file_contents = f'<details><summary>{relative_file["title"]}</summary>\n\n{file_contents}\n\n</details>'
-            else:
-                # Thanks to https://www.techcoil.com/blog/how-to-use-python-3-to-convert-your-images-to-base64-encoding/
-                with open(file_path, "rb") as img:
-                    base64 = b64encode(img.read()).decode("utf-8")
-                file_contents = f'<img alt="{relative_file["title"]}" src="{base64}" />'
-
-            input_string = input_string.replace(relative_file["tag"], file_contents)
+        input_string = _import_relative_files(input_string, filename)
 
     for section in sections:
         section_in_content = section.header_in(input_string)
