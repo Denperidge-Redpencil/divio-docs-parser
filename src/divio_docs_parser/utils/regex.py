@@ -1,4 +1,6 @@
-from re import search as _search, RegexFlag, sub, escape
+from re import search as _search, RegexFlag, sub, escape, findall, compile, finditer
+
+_regex_relative_href = r"(!|)\[(?P<title>.*?)\]\((?!(#|http://|https://))(?P<href>.*?)\)"
 
 def regex_search(needle: r"str", haystack: str, flags=0):
     """Base regex search helper"""
@@ -21,3 +23,10 @@ def search_ignorecase_multiline_dotallnewline(needle: r"str", haystack: str):
     """
     return regex_search(needle, haystack, RegexFlag.IGNORECASE | RegexFlag.MULTILINE | RegexFlag.S)
 
+def grab_relative_hrefs(haystack: str):
+    output = []
+    results = finditer(_regex_relative_href, haystack)
+    for result in results:
+        output.append(result.groupdict())
+    
+    return output
