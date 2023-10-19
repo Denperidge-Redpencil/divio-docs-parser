@@ -1,6 +1,10 @@
 from re import search as _search, RegexFlag, sub, escape, findall, compile, finditer
 
-_regex_relative_href = r"(?P<tag>(!|)\[(?P<title>.*?)\]\((?!(#|http://|https://))(?P<href>.*?)\))"
+# The original broke on longer files. You can test this with
+# https://github.com/Denperidge-Redpencil/du-project/blob/master/docs/discussions/design-philosophy.md
+#_regex_relative_href = r"(?P<tag>(!|)\[(?P<title>.*?)\]\((?!(#|http://|https://))(?P<href>.*?)\))"
+# This replacement also matches headers & external files. These have to be filtered out later
+_regex_relative_href = r"(?P<tag>(!|)\[(?P<title>.*?)\]\((?P<href>.*?)\))"
 
 def regex_search(needle: r"str", haystack: str, flags=0):
     """Base regex search helper"""
@@ -27,6 +31,10 @@ def grab_relative_hrefs(haystack: str):
     output = []
     results = finditer(_regex_relative_href, haystack)
     for result in results:
-        output.append(result.groupdict())
+        if not result.group("href").startswith("https://") and \
+                not result.group("href").startswith("http://") and \
+                not result.group("href").startswith("#"):
+            
+            output.append(result.groupdict())
     
     return output
