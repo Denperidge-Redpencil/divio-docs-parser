@@ -21,6 +21,8 @@ TEST_README_CONTENT = \
 ## Tutorials
 This is the tutorial text!
 
+![SVG File](../assets/svg.svg)
+
 ### And a subtitle
 With more text!
 
@@ -39,6 +41,8 @@ TEST_README_PARSED = {
     ID_TUTORIALS: 
         """# Tutorials
 This is the tutorial text!
+
+![SVG File](../assets/svg.svg)
 
 ## And a subtitle
 With more text!

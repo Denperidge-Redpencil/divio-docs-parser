@@ -82,6 +82,16 @@ For a different test""")
         self.assertEqual(docs.tutorials["extra/Tutorials.md"], """# Extra file
 ## Extra content
 For a different test""")
+    
+
+    def test_import_relative_files(self):
+        docs = DivioDocs().import_docs(test_data_dir, import_relative_files=True)
+
+        tutorial_content = docs.tutorials["README.md"]
+
+        for tag in ["<svg", "<img", "<details"]:
+            self.assertTrue(tag in tutorial_content, f"{tag} not found in tutorial_content")
+
 
 
 if __name__ == "__main__":

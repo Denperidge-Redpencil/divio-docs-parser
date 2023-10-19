@@ -4,6 +4,7 @@ from typing import Dict
 from pathlib import Path
 
 # Local imports
+from .utils.regex import grab_relative_hrefs
 from .utils.markdown_parser import parse_sections_from_markdown
 from .utils.files import list_all_markdown_files
 from .Section import Section
@@ -19,7 +20,8 @@ class DivioDocs():
                  regex_tutorials =      r"(tutorial|getting\W*started)",
                  regex_how_to_guides =  r"(how\W*to|guide|usage)", 
                  regex_explanation =    r"(explanation|discussion|background\W*material)",
-                 regex_reference =      r"(reference|technical)"
+                 regex_reference =      r"(reference|technical)",
+                 embed_relative_files = False
             ) -> None:
         """
         `input_string_or_path`: (Optional) Filename or string to collect & parse. More can be collected later
@@ -42,7 +44,7 @@ class DivioDocs():
         self._reference = Section(ID_REFERENCE, regex_reference)
         
         if input_string_or_path:
-            self.import_docs(input_string_or_path)
+            self.import_docs(input_string_or_path, embed_relative_files)
         
 
     def _set(self, section_name: str, file_name: str, content: str):
@@ -113,15 +115,15 @@ class DivioDocs():
         """Returns every Section object in a list: [`_tutorials`, `_how_to_guides`, `_explanation`, `_reference`]"""
         return [self._tutorials, self._how_to_guides, self._explanation, self._reference]
     
-    def _import_doc(self, path_or_string, filename: str="README.md"):
-        content = parse_sections_from_markdown(self._sectionObjects, path_or_string, filename)
+    def _import_doc(self, path_or_string, filename: str="README.md", import_relative_files = False):
+        content = parse_sections_from_markdown(self._sectionObjects, path_or_string, filename, import_relative_files)
 
         for section_id in content:
             self._append(section_id, filename, content[section_id])
         
         return self
     
-    def import_docs(self, path_or_string: str, filename:str=None):
+    def import_docs(self, path_or_string: str, filename:str=None, import_relative_files = False):
         """
         Collects & parses all documentation within either the file at the path provided, or the string provided
         
@@ -134,7 +136,7 @@ class DivioDocs():
             # String passed without specified filename
             if not filename:
                 filename = "README.md"
-            self._import_doc(path_or_string, filename)
+            self._import_doc(path_or_string, filename, import_relative_files)
 
         
         elif isfile(path_or_string):
@@ -149,13 +151,13 @@ class DivioDocs():
                     if "readme" in file or file == ".git":
                         basedir_found = True
 
-            self._import_doc(path_or_string, str(filename.relative_to(basedir)))
+            self._import_doc(path_or_string, str(filename.relative_to(basedir)), import_relative_files)
 
         elif isdir(path_or_string):
             all_md_files = list_all_markdown_files(path_or_string)
             for md_file in all_md_files:
                 # path_or_string might or might not include a trailing /, so don't use that in replace
                 filename = md_file.replace(str(path_or_string), "").lstrip("/")
-                self._import_doc(md_file, filename)
+                self._import_doc(md_file, filename, import_relative_files)
 
         return self

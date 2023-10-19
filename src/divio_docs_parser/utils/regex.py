@@ -1,6 +1,6 @@
 from re import search as _search, RegexFlag, sub, escape, findall, compile, finditer
 
-_regex_relative_href = r"(!|)\[(?P<title>.*?)\]\((?!(#|http://|https://))(?P<href>.*?)\)"
+_regex_relative_href = r"(?P<tag>(!|)\[(?P<title>.*?)\]\((?!(#|http://|https://))(?P<href>.*?)\))"
 
 def regex_search(needle: r"str", haystack: str, flags=0):
     """Base regex search helper"""

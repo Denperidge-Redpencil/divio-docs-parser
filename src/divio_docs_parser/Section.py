@@ -3,7 +3,9 @@ from re import RegexFlag, sub, escape
 from typing import Union, Match
 
 # Local imports
-from .utils.regex import search_ignorecase_multiline, search_ignorecase_multiline_dotallnewline
+from .utils.regex import search_ignorecase_multiline, search_ignorecase_multiline_dotallnewline, grab_relative_hrefs
+
+
 
 
 class Section:
