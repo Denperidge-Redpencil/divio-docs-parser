@@ -13,7 +13,7 @@ to get & parse all sections from a file
 """
 
 
-def _parse_sections_from_markdown_file(sections: List[Section], path: str, import_relative_files=False) -> Dict[str, str]:
+def _parse_sections_from_markdown_file(sections: List[Section], path: str, embed_relative_files=False) -> Dict[str, str]:
     """
     Wrapper for `_parse_sections_from_markdown_string`.
     Reads the file in the passed path and sends it to `_parse_sections_from_markdown_string`,
@@ -22,14 +22,14 @@ def _parse_sections_from_markdown_file(sections: List[Section], path: str, impor
     with open(path, "r", encoding="UTF-8") as file:
         data = file.read()                
 
-    return _parse_sections_from_markdown_string(sections, data, path, import_relative_files)
+    return _parse_sections_from_markdown_string(sections, data, path, embed_relative_files)
 
-def _parse_sections_from_markdown_string(sections: List[Section], input_string: str, filename=None, import_relative_files=False) -> Dict[str, str]:
+def _parse_sections_from_markdown_string(sections: List[Section], input_string: str, filename=None, embed_relative_files=False) -> Dict[str, str]:
     """Parses a markdown string, returning a dict { `section_id`: `section_content` }"""
     extracted_sections = dict()
 
     # Relative file import
-    if import_relative_files:
+    if embed_relative_files:
         # If filename is defined
         if filename is not None:
             path = dirname(filename)
@@ -76,7 +76,7 @@ def _parse_sections_from_markdown_string(sections: List[Section], input_string: 
     return extracted_sections
 
 
-def parse_sections_from_markdown(sections: List[Section], path_or_string: str, filename:str= None, import_relative_files=False) -> Dict[str, str]:
+def parse_sections_from_markdown(sections: List[Section], path_or_string: str, filename:str= None, embed_relative_files=False) -> Dict[str, str]:
     """
     Parses the passed markdown file or string. Returns { `section_id`: `content` }
 
@@ -92,6 +92,6 @@ def parse_sections_from_markdown(sections: List[Section], path_or_string: str, f
                     This is useful (for example) if your filename is ./documentation/tutorials/project.md
     """
     if exists(path_or_string):
-        return _parse_sections_from_markdown_file(sections, path_or_string, import_relative_files)
+        return _parse_sections_from_markdown_file(sections, path_or_string, embed_relative_files=embed_relative_files)
     else:
-        return _parse_sections_from_markdown_string(sections, path_or_string, filename, import_relative_files)
+        return _parse_sections_from_markdown_string(sections, path_or_string, filename, embed_relative_files=embed_relative_files)

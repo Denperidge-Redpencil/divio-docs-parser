@@ -84,8 +84,8 @@ For a different test""")
 For a different test""")
     
 
-    def test_import_relative_files(self):
-        docs = DivioDocs().import_docs(test_data_dir, import_relative_files=True)
+    def test_embed_relative_files(self):
+        docs = DivioDocs().import_docs(test_data_dir, embed_relative_files=True)
 
         tutorial_content = docs.tutorials["README.md"]
         for tag in ["<svg", "<img alt=\"A cute picture of a cat\"", "<details><summary>External markdown file</summary>"]:
