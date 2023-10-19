@@ -48,8 +48,10 @@ def _import_relative_files(input_string, filename):
                 file_contents = file.read()
             
             if ext == "svg":
-                file_contents = file_contents.replace("<svg", '<svg role="img"', 1)
-                file_contents = file_contents.replace(">", f'<title>{relative_file["title"]}</title>', 1)
+                file_contents = file_contents.replace("\n", " ")
+                file_contents = file_contents.replace("<svg", '\n\n<svg role="img"', 1)
+                file_contents = file_contents.replace(">", f'><title>{relative_file["title"]}</title>', 1)
+                file_contents = file_contents.replace("</svg>", "</svg>\n\n", 1)
             else:
                 file_contents = f'<details><summary>{relative_file["title"]}</summary>\n\n{file_contents}\n\n</details>'
         else:
