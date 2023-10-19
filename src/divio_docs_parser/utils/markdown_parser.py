@@ -58,7 +58,7 @@ def _import_relative_files(input_string, filename):
             # Thanks to https://www.techcoil.com/blog/how-to-use-python-3-to-convert-your-images-to-base64-encoding/
             with open(file_path, "rb") as img:
                 base64 = b64encode(img.read()).decode("utf-8")
-            file_contents = f'<img alt="{relative_file["title"]}" src="{base64}" />'
+            file_contents = f'\n\n<img alt="{relative_file["title"]}" src="data:image/{ext};base64,{base64}" />\n\n'
 
         input_string = input_string.replace(relative_file["tag"], file_contents)
 
