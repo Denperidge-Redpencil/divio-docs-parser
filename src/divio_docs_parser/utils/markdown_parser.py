@@ -42,7 +42,7 @@ def _import_relative_files(input_string, filename):
         ext = splitext(file_path)[1].lower().replace(".", "", 1)
 
         if ext == "":
-            pass
+            continue
         elif ext == "svg" or ext == "md":
             with open(file_path, "r", encoding="UTF-8") as file:
                 file_contents = file.read()
