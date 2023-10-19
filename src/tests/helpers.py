@@ -22,6 +22,8 @@ TEST_README_CONTENT = \
 This is the tutorial text!
 
 ![SVG File](../assets/svg.svg)
+[External markdown file](../assets/import.md)
+![A cute picture of a cat](../assets/love!.jpg)
 
 ### And a subtitle
 With more text!
@@ -43,6 +45,8 @@ TEST_README_PARSED = {
 This is the tutorial text!
 
 ![SVG File](../assets/svg.svg)
+[External markdown file](../assets/import.md)
+![A cute picture of a cat](../assets/love!.jpg)
 
 ## And a subtitle
 With more text!

@@ -1,7 +1,8 @@
 # Built-in imports
 from os import getcwd
-from os.path import exists, join, realpath, dirname
+from os.path import exists, join, realpath, dirname, splitext
 from typing import Dict, List
+from base64 import b64encode
 
 # Local imports
 from .regex import grab_relative_hrefs
@@ -40,12 +41,24 @@ def _parse_sections_from_markdown_string(sections: List[Section], input_string: 
         for relative_file in relative_files:
             file_path = realpath(join(path, relative_file["href"]))
 
-            with open(file_path, "r", encoding="UTF-8") as file:
-                file_contents = file.read()
 
-            file_contents = file_contents.replace("<svg", '<svg role="img"', 1)
-            file_contents = file_contents.replace(">", f'<title>{relative_file["title"]}</title>', 1)
-            
+            ext = splitext(file_path)[1].lower().replace(".", "", 1)
+
+            if ext == "svg" or ext == "md":
+                with open(file_path, "r", encoding="UTF-8") as file:
+                    file_contents = file.read()
+                
+                if ext == "svg":
+                    file_contents = file_contents.replace("<svg", '<svg role="img"', 1)
+                    file_contents = file_contents.replace(">", f'<title>{relative_file["title"]}</title>', 1)
+                else:
+                    file_contents = f'<details><summary>{relative_file["title"]}</summary>\n\n{file_contents}\n\n</details>'
+            else:
+                # Thanks to https://www.techcoil.com/blog/how-to-use-python-3-to-convert-your-images-to-base64-encoding/
+                with open(file_path, "rb") as img:
+                    base64 = b64encode(img.read()).decode("utf-8")
+                file_contents = f'<img alt="{relative_file["title"]}" src="{base64}" />'
+
             input_string = input_string.replace(relative_file["tag"], file_contents)
 
     for section in sections:
