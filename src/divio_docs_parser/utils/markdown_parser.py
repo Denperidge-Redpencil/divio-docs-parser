@@ -51,16 +51,16 @@ def _import_relative_files(input_string, filename):
                 file_contents = file_contents.replace("\n", " ")
                 file_contents = file_contents.replace("<svg", '\n\n<svg role="img"', 1)
                 file_contents = file_contents.replace(">", f'><title>{relative_file["title"]}</title>', 1)
-                file_contents = file_contents.replace("</svg>", "</svg>\n\n", 1)
+                file_contents = file_contents.replace("</svg>", "</svg>", 1)
             else:
-                file_contents = f'<details><summary>{relative_file["title"]}</summary>\n\n{file_contents}\n\n</details>'
+                file_contents = f'<details>\n<summary>{relative_file["title"]}</summary>\n\n\n{file_contents}\n\n</details>'
         else:
             # Thanks to https://www.techcoil.com/blog/how-to-use-python-3-to-convert-your-images-to-base64-encoding/
             with open(file_path, "rb") as img:
                 base64 = b64encode(img.read()).decode("utf-8")
-            file_contents = f'\n\n<img alt="{relative_file["title"]}" src="data:image/{ext};base64,{base64}" />\n\n'
+            file_contents = f'<img alt="{relative_file["title"]}" src="data:image/{ext};base64,{base64}" />'
 
-        input_string = input_string.replace(relative_file["tag"], file_contents)
+        input_string = input_string.replace(relative_file["tag"], f"\n\n\n{file_contents}\n\n\n")
 
     return input_string
 
